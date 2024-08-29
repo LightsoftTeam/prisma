@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { Unit } from "src/units/entities/unit.entity";
+import { Unit } from "src/domain/entities/unit.entity";
 
 export async function getUnits() {
     const data = (JSON.parse(await readFile('local_data/units.json', 'utf-8') || '[]'));

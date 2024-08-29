@@ -1,10 +1,20 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
 
 @CosmosPartitionKey('enterpriseId')
-export class Supplier {
+export class Product {
     id?: string;
-    personId: string;
     enterpriseId: string;
+    name: string;
+    code: string;
+    description?: string;
+    salePrice: number;
+    purchasePrice: number;
+    stock: number;
+    unitId: string;
+    isActive: boolean;
+    image?: string;
+    categoryId?: string;
+    brandId?: string;
     @CosmosDateTime() createdAt: Date;
     @CosmosDateTime() updatedAt?: Date;
     @CosmosDateTime() deletedAt?: Date;

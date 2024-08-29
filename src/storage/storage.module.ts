@@ -3,7 +3,6 @@ import { StorageController } from './storage.controller';
 import { StorageService } from './storage.service';
 import { AzureStorageModule } from '@nestjs/azure-storage';
 import { ConfigService } from '@nestjs/config';
-import { CommonModule } from 'src/common/common.module';
 
 @Module({
   controllers: [StorageController],
@@ -17,7 +16,6 @@ import { CommonModule } from 'src/common/common.module';
       }),
       inject: [ConfigService],
     }),
-    CommonModule,
   ]
 })
 export class StorageModule {}

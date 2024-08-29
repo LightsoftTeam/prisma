@@ -1,4 +1,4 @@
-import { Enterprise } from "src/enterprises/entities/enterprise.entity";
+import { Enterprise } from "src/domain/entities/enterprise.entity";
 
 export function getEnterprises(){
     const enterprises: Enterprise[] = [

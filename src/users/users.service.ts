@@ -1,18 +1,17 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, Scope, UnauthorizedException } from '@nestjs/common';
-import type { Container } from '@azure/cosmos';
-import { User } from './entities/user.entity';
+import { User } from '../domain/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { InjectModel } from '@nestjs/azure-database';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { REQUEST } from '@nestjs/core';
-import { Person } from 'src/people/entities/person.entity';
-import { PeopleService } from 'src/people/people.service';
-import { RoleName } from 'src/roles/entities/role.entity';
+import { Person } from 'src/domain/entities/person.entity';
+import { RoleName } from 'src/domain/entities/role.entity';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { FindUsersDto } from './dto/find-users.dto';
+import { UsersRepository } from 'src/domain/repositories/users.repository';
+import { PeopleRepository } from 'src/domain/repositories/people.repository';
 
 const PASSWORD_SALT_ROUNDS = 10;
 
@@ -20,11 +19,10 @@ const PASSWORD_SALT_ROUNDS = 10;
 export class UsersService {
 
   constructor(
-    @InjectModel(User)
-    private readonly usersContainer: Container,
+    private readonly usersRepository: UsersRepository,
     private readonly logger: ApplicationLoggerService,
     @Inject(REQUEST) private request: Request,
-    private readonly peopleService: PeopleService,
+    private readonly peopleRepository: PeopleRepository,
   ) {
     this.logger.setContext(UsersService.name);
   }
@@ -32,76 +30,21 @@ export class UsersService {
   async findAll(findUsersDto: FindUsersDto) {
     const { subsidiaryId } = findUsersDto;
     this.logger.log('findAll users');
-    const querySpec = {
-      query: 'SELECT * FROM c where c.subsidiaryId = @subsidiaryId AND NOT IS_DEFINED(c.deletedAt) ORDER BY c.createdAt DESC',
-      parameters: [
-        {
-          name: '@subsidiaryId',
-          value: subsidiaryId
-        }
-      ],
-    };
-    const { resources } = await this.usersContainer.items.query<User>(querySpec).fetchAll();
-    return Promise.all(resources.map(user => this.fillUser({ user })));
+    const users = await this.usersRepository.findBySubsidiaryId(subsidiaryId);
+    return Promise.all(users.map(user => this.fillUser({ user })));
   }
 
   async findOne(id: string) {
     this.logger.log(`find user by id ${id}`);
-    const user = await this.getById(id);
+    const user = await this.usersRepository.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return this.fillUser({ user });
   }
 
-  async getById(id: string): Promise<User | null> {
-    try {
-      const querySpec = {
-        query: 'SELECT * FROM c WHERE c.id = @id',
-        parameters: [
-          {
-            name: '@id',
-            value: id,
-          },
-        ],
-      };
-      const { resources } = await this.usersContainer.items.query<User>(querySpec).fetchAll();
-      return resources.at(0) ?? null;
-    } catch (error) {
-      this.logger.error(`error getting user by id ${error.message}`);
-      return null;
-    }
-  }
-
-  async getByIds(ids: string[]) {
-    const querySpec = {
-      query: 'SELECT c.id, c.name, c.image FROM c WHERE ARRAY_CONTAINS(@ids, c.id)',
-      parameters: [
-        {
-          name: '@ids',
-          value: ids,
-        },
-      ],
-    };
-    const { resources } = await this.usersContainer.items.query<User>(querySpec).fetchAll();
-    return resources;
-  }
-
   async getByUsername(username: string): Promise<User | null> {
-    const querySpec = {
-      query: 'SELECT * FROM c WHERE c.username = @username',
-      parameters: [
-        {
-          name: '@username',
-          value: username,
-        },
-      ],
-    };
-    const { resources } = await this.usersContainer.items.query<User>(querySpec).fetchAll();
-    if (resources.length === 0) {
-      return null;
-    }
-    return resources[0];
+    return this.usersRepository.findByUsername(username);
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -117,7 +60,7 @@ export class UsersService {
       }
       const hashedPassword = bcrypt.hashSync(password, PASSWORD_SALT_ROUNDS);
       //TODO: check if person is already created
-      const person = await this.peopleService.create(personDto);
+      const person = await this.peopleRepository.create({...personDto, createdAt: new Date()});
       const user: User = {
         ...userDto,
         password: hashedPassword,
@@ -125,8 +68,8 @@ export class UsersService {
         isActive: true,
         createdAt: new Date(),
       };
-      const { resource } = await this.usersContainer.items.create<User>(user);
-      const filledUser = await this.fillUser({ user: resource, person });
+      const newUser = await this.usersRepository.create(user);
+      const filledUser = await this.fillUser({ user: newUser, person });
       return filledUser;
     } catch (error) {
       this.logger.error(error.message);
@@ -140,38 +83,33 @@ export class UsersService {
     if (loggedUser.id !== id && loggedUser.roleName !== RoleName.ADMIN) {
       throw new UnauthorizedException('Unauthorized');
     }
-    const user = await this.getById(id);//throw not found exception if not found
+    const user = await this.usersRepository.findById(id);
     if(!user){
       throw new NotFoundException('User not found');
     }
     const { person: personDto, password, ...newUserDto } = updateUserDto;
     this.logger.log(`personDto ${JSON.stringify(personDto)}`);
     this.logger.log(`newUserDto ${JSON.stringify(newUserDto)}`);
-    const updatedUser: User = {
+    const updatePayload: User = {
       ...user,
       ...newUserDto,
     };
     if (password) {
-      updatedUser.password = bcrypt.hashSync(updateUserDto.password, PASSWORD_SALT_ROUNDS);
+      updatePayload.password = bcrypt.hashSync(updateUserDto.password, PASSWORD_SALT_ROUNDS);
     }
     if (personDto) {
       this.logger.log(`updating person ${JSON.stringify(personDto)}`);
-      await this.peopleService.update(user.personId, personDto);
+      await this.peopleRepository.update(user.personId, personDto);
     }
-    this.logger.log(`updated user: ${JSON.stringify(updatedUser)}`);
-    const { resource } = await this.usersContainer.item(user.id, user.id).replace<User>(updatedUser);
-    return this.fillUser({ user: resource });
+    this.logger.log(`updated user: ${JSON.stringify(updatePayload)}`);
+    const updatedUser = await this.usersRepository.update(id, updatePayload);
+    return this.fillUser({ user: updatedUser });
   }
 
   async remove(id: string) {
     try {
       this.revokeWhenIsNotAdmin();
-      const user = await this.findOne(id);//throw not found exception if not found
-      const deletedUser = {
-        ...user,
-        deletedAt: new Date(),
-      };
-      await this.usersContainer.item(user.id).replace(deletedUser);
+      await this.usersRepository.delete(id);
       return null;
     } catch (error) {
       this.logger.error(error.message);
@@ -190,7 +128,7 @@ export class UsersService {
     this.logger.log(`filling user - person: ${!!person} - user: ${!!user}`);
     if (!person) {
       const { personId } = user;
-      person = await this.peopleService.getById(personId);
+      person = await this.peopleRepository.findById(personId);
     }
     const filledUser = {
       ...user,
@@ -198,11 +136,6 @@ export class UsersService {
     };
     return FormatCosmosItem.cleanDocument(filledUser, ['password']);
   }
-
-  // isAdmin() {
-  //   const loggedUser = this.getLoggedUser();
-  //   return loggedUser.role === Role.ADMIN;
-  // }
 
   revokeWhenIsNotAdmin() {
     const loggedUser = this.getLoggedUser();

@@ -1,7 +1,7 @@
 import { CosmosClient } from '@azure/cosmos';
 import * as dotenv from 'dotenv';
 import { getEnterprises } from './seeds/enterprises.seed';
-import { Ubigeo } from '../../ubigeos/entities/ubigeo.entity';
+import { Ubigeo } from '../../domain/entities/ubigeo.entity';
 import { getUbigeos } from './seeds/ubigeos.seed';
 import { getUnits } from './seeds/units.seed';
 import { getRoles } from './seeds/roles.seed';

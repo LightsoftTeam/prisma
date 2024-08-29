@@ -1,19 +1,10 @@
 import { Module } from '@nestjs/common';
 import { EnterprisesService } from './enterprises.service';
 import { EnterprisesController } from './enterprises.controller';
-import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { Enterprise } from './entities/enterprise.entity';
-import { CommonModule } from 'src/common/common.module';
+import { EnterprisesRepository } from 'src/domain/repositories';
 
 @Module({
   controllers: [EnterprisesController],
-  providers: [EnterprisesService],
-  imports: [
-    AzureCosmosDbModule.forFeature([
-      {dto: Enterprise}
-    ]),
-    CommonModule,
-  ],
-  exports: [AzureCosmosDbModule],
+  providers: [EnterprisesService, EnterprisesRepository],
 })
 export class EnterprisesModule {}

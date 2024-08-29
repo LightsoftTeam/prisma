@@ -138,34 +138,6 @@
         ]
       }
     },
-    "/api/roles": {
-      "get": {
-        "operationId": "RolesController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Return all roles"
-          }
-        },
-        "tags": [
-          "Roles"
-        ]
-      }
-    },
-    "/api/people": {
-      "get": {
-        "operationId": "PeopleController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Get all people"
-          }
-        },
-        "tags": [
-          "People"
-        ]
-      }
-    },
     "/api/auth/login": {
       "post": {
         "operationId": "AuthController_signIn",
@@ -210,198 +182,6 @@
         ]
       }
     },
-    "/api/enterprises": {
-      "post": {
-        "operationId": "EnterprisesController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEnterpriseDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        }
-      },
-      "get": {
-        "operationId": "EnterprisesController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/enterprises/{id}": {
-      "get": {
-        "operationId": "EnterprisesController_findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "patch": {
-        "operationId": "EnterprisesController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateEnterpriseDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "operationId": "EnterprisesController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/subsidiaries": {
-      "post": {
-        "operationId": "SubsidiariesController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateSubsidiaryDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        }
-      },
-      "get": {
-        "operationId": "SubsidiariesController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/subsidiaries/{id}": {
-      "get": {
-        "operationId": "SubsidiariesController_findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "patch": {
-        "operationId": "SubsidiariesController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateSubsidiaryDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "operationId": "SubsidiariesController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/storage/upload": {
       "post": {
         "operationId": "StorageController_upload",
@@ -435,6 +215,72 @@
         },
         "tags": [
           "Storage"
+        ]
+      }
+    },
+    "/api/roles": {
+      "get": {
+        "operationId": "RolesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return all roles"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/api/enterprises": {
+      "get": {
+        "operationId": "EnterprisesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Enterprises"
+        ]
+      }
+    },
+    "/api/people": {
+      "get": {
+        "operationId": "PeopleController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all people"
+          }
+        },
+        "tags": [
+          "People"
+        ]
+      }
+    },
+    "/api/people/create": {
+      "post": {
+        "operationId": "PeopleController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a new person"
+          }
+        },
+        "tags": [
+          "People"
         ]
       }
     },
@@ -528,25 +374,6 @@
       }
     },
     "/api/units": {
-      "post": {
-        "operationId": "UnitsController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnitDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        }
-      },
       "get": {
         "operationId": "UnitsController_findAll",
         "parameters": [],
@@ -554,73 +381,10 @@
           "200": {
             "description": ""
           }
-        }
-      }
-    },
-    "/api/units/{id}": {
-      "get": {
-        "operationId": "UnitsController_findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "patch": {
-        "operationId": "UnitsController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUnitDto"
-              }
-            }
-          }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "operationId": "UnitsController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
+        "tags": [
+          "Units"
+        ]
       }
     },
     "/api/brands": {
@@ -641,7 +405,10 @@
           "201": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Brands"
+        ]
       },
       "get": {
         "operationId": "BrandsController_findAll",
@@ -661,7 +428,10 @@
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Brands"
+        ]
       }
     },
     "/api/brands/{id}": {
@@ -691,7 +461,10 @@
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Brands"
+        ]
       },
       "delete": {
         "operationId": "BrandsController_remove",
@@ -709,7 +482,10 @@
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Brands"
+        ]
       }
     },
     "/api/products": {
@@ -878,6 +654,102 @@
     "/api/suppliers/{id}": {
       "delete": {
         "operationId": "SuppliersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/sales": {
+      "post": {
+        "operationId": "SalesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSaleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "SalesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/sales/{id}": {
+      "get": {
+        "operationId": "SalesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "SalesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSaleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "SalesController_remove",
         "parameters": [
           {
             "name": "id",
@@ -1087,22 +959,6 @@
           "password"
         ]
       },
-      "CreateEnterpriseDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "UpdateEnterpriseDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "CreateSubsidiaryDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "UpdateSubsidiaryDto": {
-        "type": "object",
-        "properties": {}
-      },
       "CreateCategoryDto": {
         "type": "object",
         "properties": {
@@ -1147,14 +1003,6 @@
             "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
           }
         }
-      },
-      "CreateUnitDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "UpdateUnitDto": {
-        "type": "object",
-        "properties": {}
       },
       "CreateBrandDto": {
         "type": "object",
@@ -1353,6 +1201,14 @@
           "personId",
           "enterpriseId"
         ]
+      },
+      "CreateSaleDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateSaleDto": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

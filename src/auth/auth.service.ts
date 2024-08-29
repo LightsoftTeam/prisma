@@ -1,22 +1,24 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
-import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { LoginResponse } from './types/login-response';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { User } from 'src/users/entities/user.entity';
-import { EnterprisesService } from 'src/enterprises/enterprises.service';
-import { SubsidiariesService } from 'src/subsidiaries/subsidiaries.service';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
+import { SubsidiariesRepository } from 'src/domain/repositories/subsidiaries.repository';
+import { EnterprisesRepository } from 'src/domain/repositories/enterprises.repository';
+import { User } from 'src/domain/entities';
+import { UsersRepository } from '../domain/repositories/users.repository';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly enterprisesService: EnterprisesService,
-    private readonly subsidiariesService: SubsidiariesService,
+    private readonly usersRepository: UsersRepository,
+    private readonly enterprisesRepository: EnterprisesRepository,
+    private readonly subsidiariesRepository: SubsidiariesRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly logger: ApplicationLoggerService,
@@ -25,7 +27,7 @@ export class AuthService {
   async signIn({ username, password: passwordPayload }: SignInDto): Promise<LoginResponse> {
     this.logger.log(`sign in user ${username}`);
     try {
-      const user = await this.usersService.getByUsername(username);
+      const user = await this.usersRepository.findByUsername(username);
       if (!user || !user.isActive || user.deletedAt) {
         throw new UnauthorizedException();
       }
@@ -40,11 +42,11 @@ export class AuthService {
       const token = this.generateToken(user);
       const [ filledUser, subsidiary ] = await Promise.all([
         this.usersService.fillUser({ user }),
-        this.subsidiariesService.getById(user.subsidiaryId),
+        this.subsidiariesRepository.findById(user.subsidiaryId),
       ]);
       this.logger.log(`subsidary ${JSON.stringify(subsidiary)}`);
       this.logger.log(`enterprise ${JSON.stringify(subsidiary.enterpriseId)}`);
-      const enterprise = await this.enterprisesService.getById(subsidiary.enterpriseId);
+      const enterprise = await this.enterprisesRepository.findById(subsidiary.enterpriseId);
       return {
         user: filledUser,
         enterprise: FormatCosmosItem.cleanDocument(enterprise),

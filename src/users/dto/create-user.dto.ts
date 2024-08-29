@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsObject, IsString, min, MinLength, ValidateNested } from "class-validator";
 import { CreatePersonDto } from "src/people/dto/create-person.dto";
-import { RoleName } from "src/roles/entities/role.entity";
+import { RoleName } from "src/domain/entities/role.entity";
 
 export class CreateUserDto {
     @ApiProperty({

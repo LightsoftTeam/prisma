@@ -1,21 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { BrandsController } from './brands.controller';
-import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { Brand } from './entities/brand.entity';
-import { CommonModule } from 'src/common/common.module';
+import { BrandsRepository } from 'src/domain/repositories';
 
 @Module({
   controllers: [BrandsController],
-  providers: [BrandsService],
-  imports: [
-    AzureCosmosDbModule.forFeature([{
-      dto: Brand,
-    }]),
-    CommonModule,
-  ],
-  exports: [
-    AzureCosmosDbModule,
-  ]
+  providers: [BrandsService, BrandsRepository],
 })
 export class BrandsModule {}

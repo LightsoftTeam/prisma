@@ -1,4 +1,4 @@
-import { RoleName } from '../../../roles/entities/role.entity';
+import { RoleName } from '../../../domain/entities/role.entity';
 
 export function getRoles() {
     const roles = [

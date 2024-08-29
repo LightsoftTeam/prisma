@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { DocumentType, PersonType } from "../entities/person.entity";
+import { DocumentType, PersonType } from "../../domain/entities/person.entity";
 
 export class CreatePersonDto {
     @ApiProperty({

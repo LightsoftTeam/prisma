@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import * as appInsights from 'applicationinsights';
 import { CommonController } from './common.controller';
 import { ApplicationLoggerService } from './services/application-logger.service';
 
+@Global()
 @Module({
   providers: [
     {

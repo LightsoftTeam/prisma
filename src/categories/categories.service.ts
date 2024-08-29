@@ -1,86 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/azure-database';
-import type { Container } from '@azure/cosmos';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { Category } from '../domain/entities/category.entity';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { EnterprisesService } from 'src/enterprises/enterprises.service';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
 import { FindCategoriesDto } from './dto/find-categories.dto';
+import { CategoriesRepository } from 'src/domain/repositories/categories.repository';
 
 @Injectable()
 export class CategoriesService {
 
   constructor(
-    @InjectModel(Category)
-    private readonly categoriesContainer: Container,
+    private readonly categoriesRepository: CategoriesRepository,
     private readonly logger: ApplicationLoggerService,
-    private readonly enterprisesService: EnterprisesService,
   ) { }
 
   async create(createCategoryDto: CreateCategoryDto) {
     this.logger.log('Creating a new category');
-    const { parentId, enterpriseId } = createCategoryDto;
-    if (parentId) {
-      this.logger.log(`Parent category id: ${parentId}`);
-      const parentCategory = await this.getById(parentId);
-      if (!parentCategory) {
-        throw new NotFoundException('Parent category not found');
-      }
-    }
-    if (enterpriseId) {
-      const enterprise = await this.enterprisesService.getById(enterpriseId);
-      if (!enterprise) {
-        throw new NotFoundException('Enterprise not found');
-      }
-    }
-    const newCategory = {
+    const category: Category = {
       ...createCategoryDto,
       createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.logger.log(`New category: ${JSON.stringify(newCategory)}`);
-    const { resource } = await this.categoriesContainer.items.create(newCategory);
-    return this.fill(resource);
-  }
-
-  async getById(id: string): Promise<Category | null> {
-    try {
-      this.logger.log(`Getting category by id: ${id}`);
-      const querySpec = {
-        query: 'SELECT * FROM c WHERE c.id = @id',
-        parameters: [{ name: '@id', value: id }],
-      };
-      const { resources } = await this.categoriesContainer.items.query<Category>(querySpec).fetchAll();
-      return resources[0] ?? null;
-    } catch (error) {
-      return null;
     }
-  }
-
-  async getByIds(ids: string[]) {
-    this.logger.log(`Getting categories by ids: ${ids.join(', ')}`);
-    const querySpec = {
-      query: 'SELECT * FROM c WHERE ARRAY_CONTAINS(@ids, c.id)',
-      parameters: [{ name: '@ids', value: ids }],
-    };
-    const { resources: categories } = await this.categoriesContainer.items.query<Category>(querySpec).fetchAll();
-    return categories.map(c => FormatCosmosItem.cleanDocument(c));
+    const newCategory = await this.categoriesRepository.create(category);
+    return this.fill(newCategory);
   }
 
   async findAll({ enterpriseId }: FindCategoriesDto) {
     this.logger.log(`Getting all categories - ${enterpriseId}`);
-    const querySpec = {
-      query: 'SELECT * FROM c WHERE c.enterpriseId = @enterpriseId AND NOT IS_DEFINED(c.deletedAt)',
-      parameters: [{ name: '@enterpriseId', value: enterpriseId }],
-    };
-    const { resources: categories } = await this.categoriesContainer.items.query<Category>(querySpec).fetchAll();
+    const categories = await this.categoriesRepository.findByEnterpriseId(enterpriseId);
     return this.flattenCategories(categories);
   }
 
   async findOne(id: string) {
-    const category = await this.getById(id);
+    const category = await this.categoriesRepository.findById(id);
     if (!category) {
       throw new NotFoundException('Category not found');
     }
@@ -89,32 +41,13 @@ export class CategoriesService {
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     this.logger.log(`Updating category by id: ${id}`);
-    const category = await this.getById(id);
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
-    const updatedCategory = {
-      ...category,
-      ...updateCategoryDto,
-      updatedAt: new Date(),
-    };
-    this.logger.log(`Updated category: ${JSON.stringify(updatedCategory)}`);
-    const { resource } = await this.categoriesContainer.item(id, category.enterpriseId).replace(updatedCategory);
-    return this.fill(resource);
+    const updatedCategory = await this.categoriesRepository.update(id, updateCategoryDto);
+    return this.fill(updatedCategory);
   }
 
   async remove(id: string) {
     this.logger.log(`Deleting category by id: ${id}`);
-    const category = await this.getById(id);
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
-    const deletedCategory = {
-      ...category,
-      deletedAt: new Date(),
-    };
-    this.logger.log(`Deleted category: ${JSON.stringify(deletedCategory)}`);
-    await this.categoriesContainer.item(id, category.enterpriseId).replace(deletedCategory);
+    await this.categoriesRepository.delete(id);
     return null;
   }
 
@@ -168,7 +101,7 @@ export class CategoriesService {
     let selectedCategory = category;
     while (selectedCategory.parentId) {
       console.log('parent founded: ', selectedCategory.parentId);
-      const parentCategory = await this.getById(selectedCategory.parentId);
+      const parentCategory = await this.findOne(selectedCategory.parentId);
       if (parentCategory) {
         relatedCategories.push(parentCategory);
         selectedCategory = parentCategory;

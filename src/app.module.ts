@@ -17,6 +17,8 @@ import { UnitsModule } from './units/units.module';
 import { BrandsModule } from './brands/brands.module';
 import { ProductsModule } from './products/products.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
+import { SalesModule } from './sales/sales.module';
+import { DomainModule } from './domain/domain.module';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
       inject: [ConfigService],
     }),
     CommonModule,
+    DomainModule,
     UsersModule,
     AuthModule,
     StorageModule,
@@ -46,6 +49,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
     BrandsModule,
     ProductsModule,
     SuppliersModule,
+    SalesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

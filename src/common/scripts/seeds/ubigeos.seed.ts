@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { Ubigeo } from "src/ubigeos/entities/ubigeo.entity";
+import { Ubigeo } from "src/domain/entities/ubigeo.entity";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function getUbigeos() {

@@ -8,6 +8,6 @@ export class Category {
     parentId?: string;
     children?: Category[];
     @CosmosDateTime() createdAt: Date;
-    @CosmosDateTime() updatedAt: Date;
+    @CosmosDateTime() updatedAt?: Date;
     @CosmosDateTime() deletedAt?: Date;
 }
