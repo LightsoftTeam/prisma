@@ -1,0 +1,1359 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/swagger": {
+      "get": {
+        "operationId": "AppController_getSwagger",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1"
+        ]
+      }
+    },
+    "/api/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "summary": "Get users",
+        "parameters": [
+          {
+            "name": "subsidiaryId",
+            "required": true,
+            "in": "query",
+            "description": "The subsidiary id to filter users",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return all users"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "summary": "Create a user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a new user"
+          },
+          "400": {
+            "description": "User already exists"
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/users/{id}": {
+      "patch": {
+        "operationId": "UsersController_update",
+        "summary": "Update a user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated succesfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "summary": "Delete a user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted succesfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/roles": {
+      "get": {
+        "operationId": "RolesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return all roles"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/api/people": {
+      "get": {
+        "operationId": "PeopleController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all people"
+          }
+        },
+        "tags": [
+          "People"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/authenticate": {
+      "get": {
+        "operationId": "AuthController_getAuthenticatedUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Retrieve authenticated user."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/enterprises": {
+      "post": {
+        "operationId": "EnterprisesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEnterpriseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "EnterprisesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/enterprises/{id}": {
+      "get": {
+        "operationId": "EnterprisesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "EnterprisesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEnterpriseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "EnterprisesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/subsidiaries": {
+      "post": {
+        "operationId": "SubsidiariesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubsidiaryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "SubsidiariesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/subsidiaries/{id}": {
+      "get": {
+        "operationId": "SubsidiariesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "SubsidiariesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubsidiaryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "SubsidiariesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/storage/upload": {
+      "post": {
+        "operationId": "StorageController_upload",
+        "summary": "Upload a file",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Request Body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The file has been successfully uploaded."
+          }
+        },
+        "tags": [
+          "Storage"
+        ]
+      }
+    },
+    "/api/categories": {
+      "post": {
+        "operationId": "CategoriesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "CategoriesController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The id of the enterprise",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/categories/{id}": {
+      "patch": {
+        "operationId": "CategoriesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "CategoriesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/units": {
+      "post": {
+        "operationId": "UnitsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "UnitsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/units/{id}": {
+      "get": {
+        "operationId": "UnitsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UnitsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUnitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "UnitsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/brands": {
+      "post": {
+        "operationId": "BrandsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBrandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "BrandsController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id to filter brands",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/brands/{id}": {
+      "patch": {
+        "operationId": "BrandsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBrandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "BrandsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/products": {
+      "post": {
+        "operationId": "ProductsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "get": {
+        "operationId": "ProductsController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id to filter products",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all products"
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "operationId": "ProductsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "patch": {
+        "operationId": "ProductsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "delete": {
+        "operationId": "ProductsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted"
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/api/suppliers": {
+      "post": {
+        "operationId": "SuppliersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSupplierDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "SuppliersController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id of resources to filter",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/suppliers/{id}": {
+      "delete": {
+        "operationId": "SuppliersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Observatorio USS",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Api",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreatePersonDto": {
+        "type": "object",
+        "properties": {
+          "givenNames": {
+            "type": "string",
+            "description": "The given names of the person",
+            "example": "Jhon"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The last name of the person",
+            "example": "Doe"
+          },
+          "address": {
+            "type": "string",
+            "description": "The address of the person",
+            "example": "Av. Lima 123"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the person",
+            "example": "jhon@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone of the person",
+            "example": "987654321"
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the person",
+            "example": "https://example.com/image.jpg",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the person",
+            "example": "natural"
+          },
+          "documentType": {
+            "type": "string",
+            "description": "The document type of the person",
+            "example": "dni"
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "The document number of the person",
+            "example": "12345678"
+          }
+        },
+        "required": [
+          "givenNames",
+          "lastName",
+          "address",
+          "email",
+          "phone",
+          "image",
+          "type",
+          "documentType",
+          "documentNumber"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user",
+            "example": "jhondoe1"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user",
+            "example": "password"
+          },
+          "subsidiaryId": {
+            "type": "string",
+            "description": "The subsidiary id of the user",
+            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+          },
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            ]
+          },
+          "roleName": {
+            "type": "string",
+            "description": "The role of the user",
+            "example": "cashier",
+            "enum": [
+              "super_admin",
+              "admin",
+              "cashier",
+              "warehouse_manager",
+              "accountant"
+            ]
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "subsidiaryId",
+          "person",
+          "roleName"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user",
+            "example": "jhondoe1"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user",
+            "example": "password"
+          },
+          "subsidiaryId": {
+            "type": "string",
+            "description": "The subsidiary id of the user",
+            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+          },
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            ]
+          },
+          "roleName": {
+            "type": "string",
+            "description": "The role of the user",
+            "example": "cashier",
+            "enum": [
+              "super_admin",
+              "admin",
+              "cashier",
+              "warehouse_manager",
+              "accountant"
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "The status of the user",
+            "example": true
+          }
+        },
+        "required": [
+          "isActive"
+        ]
+      },
+      "SignInDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user",
+            "example": "cajero1"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user",
+            "example": "password"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "CreateEnterpriseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateEnterpriseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateSubsidiaryDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateSubsidiaryDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the category",
+            "example": "Category 1"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "parentId": {
+            "type": "string",
+            "description": "The parent category id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          }
+        },
+        "required": [
+          "name",
+          "enterpriseId",
+          "parentId"
+        ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the category",
+            "example": "Category 1"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "parentId": {
+            "type": "string",
+            "description": "The parent category id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          }
+        }
+      },
+      "CreateUnitDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUnitDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateBrandDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the brand",
+            "example": "Nike"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id of the brand",
+            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the brand",
+            "example": "Just do it",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the brand",
+            "example": "https://example.com/image.jpg",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "enterpriseId",
+          "description",
+          "image"
+        ]
+      },
+      "UpdateBrandDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the brand",
+            "example": "Nike"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id of the brand",
+            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the brand",
+            "example": "Just do it",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the brand",
+            "example": "https://example.com/image.jpg",
+            "nullable": true
+          }
+        }
+      },
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the product",
+            "example": "Product 1"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "description": {
+            "type": "string",
+            "description": "The code of the product",
+            "example": "P001"
+          },
+          "purchasePrice": {
+            "type": "number",
+            "description": "The purchase price of the product",
+            "example": 100
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "The sale price of the product",
+            "example": 150
+          },
+          "unitId": {
+            "type": "string",
+            "description": "The unit id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "categoryId": {
+            "type": "string",
+            "description": "The category id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "brandId": {
+            "type": "string",
+            "description": "The brand id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the product",
+            "example": "https://image.jpg"
+          }
+        },
+        "required": [
+          "name",
+          "enterpriseId",
+          "description",
+          "purchasePrice",
+          "salePrice",
+          "unitId",
+          "categoryId",
+          "brandId",
+          "image"
+        ]
+      },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the product",
+            "example": "Product 1"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The enterprise id",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "description": {
+            "type": "string",
+            "description": "The code of the product",
+            "example": "P001"
+          },
+          "purchasePrice": {
+            "type": "number",
+            "description": "The purchase price of the product",
+            "example": 100
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "The sale price of the product",
+            "example": 150
+          },
+          "unitId": {
+            "type": "string",
+            "description": "The unit id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "categoryId": {
+            "type": "string",
+            "description": "The category id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "brandId": {
+            "type": "string",
+            "description": "The brand id of the product",
+            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the product",
+            "example": "https://image.jpg"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "The status of the product",
+            "example": true
+          }
+        },
+        "required": [
+          "isActive"
+        ]
+      },
+      "CreateSupplierDto": {
+        "type": "object",
+        "properties": {
+          "personId": {
+            "type": "string",
+            "description": "The id of the person",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "enterpriseId": {
+            "type": "string",
+            "description": "The id of the enterprise",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": [
+          "personId",
+          "enterpriseId"
+        ]
+      }
+    }
+  }
+}
