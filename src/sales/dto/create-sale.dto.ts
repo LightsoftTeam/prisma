@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsObject, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsNumber, IsObject, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { PaymentMethod } from "src/domain/entities";
 
 export class ItemDto{
     @ApiProperty({
@@ -47,4 +48,19 @@ export class CreateSaleDto {
     })
     @IsNumber()
     total: number;
+
+    @ApiProperty({
+        description: 'Payment Method',
+        example: PaymentMethod.CASH,
+        enum: PaymentMethod
+    })
+    @IsEnum(PaymentMethod)
+    paymentMethod: PaymentMethod;
+
+    @ApiProperty({
+        description: 'Customer ID',
+        example: 'f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b'
+    })
+    @IsUUID()
+    customerId: string;
 }

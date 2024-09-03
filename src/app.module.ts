@@ -19,6 +19,7 @@ import { ProductsModule } from './products/products.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { SalesModule } from './sales/sales.module';
 import { DomainModule } from './domain/domain.module';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { DomainModule } from './domain/domain.module';
     ProductsModule,
     SuppliersModule,
     SalesModule,
+    CustomersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

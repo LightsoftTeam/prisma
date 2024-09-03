@@ -1,16 +1,11 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
 
-export enum Source{
-    SALE = 'sale',
-}
-
 @CosmosPartitionKey('subsidiaryId')
-export class StockMovement {
+export class Kardex {
     id?: string;
     productId: string;
     quantity: number;
-    source: Source;
-    sourceId: string;
+    movementId: string;
     subsidiaryId: string;
     remarks?: string;
     @CosmosDateTime() createdAt: Date;

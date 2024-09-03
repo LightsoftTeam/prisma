@@ -786,6 +786,97 @@
           "Sales"
         ]
       }
+    },
+    "/api/customers": {
+      "post": {
+        "operationId": "CustomersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The record has been successfully created."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      },
+      "get": {
+        "operationId": "CustomersController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id of resources to filter",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records has been successfully retrieved."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      }
+    },
+    "/api/customers/{id}": {
+      "get": {
+        "operationId": "CustomersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The record has been successfully retrieved."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      },
+      "delete": {
+        "operationId": "CustomersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The record has been successfully updated."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      }
     }
   },
   "info": {
@@ -1241,12 +1332,49 @@
             "type": "number",
             "description": "Total",
             "example": 100
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "Payment Method",
+            "example": "CASH",
+            "enum": [
+              "CASH",
+              "CREDIT",
+              "DEBIT",
+              "TRANSFER"
+            ]
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Customer ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b"
           }
         },
         "required": [
           "items",
           "subsidiaryId",
-          "total"
+          "total",
+          "paymentMethod",
+          "customerId"
+        ]
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "enterpriseId": {
+            "type": "string",
+            "description": "Enterprise id",
+            "example": "123e4567-s89b-12d3-a456-426614174000"
+          },
+          "personId": {
+            "type": "string",
+            "description": "Person id",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        },
+        "required": [
+          "enterpriseId",
+          "personId"
         ]
       }
     }

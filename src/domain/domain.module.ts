@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { DomainService } from './domain.service';
 import { DomainController } from './domain.controller';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Sale, Subsidiary, Supplier, Ubigeo, Unit, StockMovement } from './entities';
+import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Movement, Subsidiary, Supplier, Ubigeo, Unit, Kardex, Customer } from './entities';
 import { 
   BrandsRepository, 
   CategoriesRepository,
@@ -11,12 +11,13 @@ import {
   PeopleRepository,
   ProductsRepository,
   RolesRepository,
-  SalesRepository,
-  StockMovementsRepository,
+  MovementsRepository,
+  KardexRepository,
   SubsidiariesRepository,
   SuppliersRepository,
   UnitsRepository,
-  UsersRepository 
+  UsersRepository, 
+  CustomersRepository
 } from './repositories';
 
 @Global()
@@ -26,13 +27,14 @@ import {
     BrandsRepository,
     DomainService, 
     CategoriesRepository,
+    CustomersRepository,
     EnterprisesRepository,
     ErrorEventsRepository,
     PeopleRepository,
     ProductsRepository,
     RolesRepository,
-    SalesRepository,
-    StockMovementsRepository,
+    MovementsRepository,
+    KardexRepository,
     SubsidiariesRepository,
     SuppliersRepository,
     UnitsRepository,
@@ -42,15 +44,16 @@ import {
     AzureCosmosDbModule.forFeature([
       { dto: Brand },
       { dto: Category },
+      { dto: Customer },
       { dto: Enterprise },
       { dto: ErrorEvent },
       { dto: Person },
       { dto: Product },
       { dto: Role },
-      { dto: Sale },
+      { dto: Movement },
       { dto: Subsidiary },
       { dto: Supplier },
-      { dto: StockMovement },
+      { dto: Kardex },
       // { dto: Ubigeo },
       { dto: Unit },
       { dto: User },

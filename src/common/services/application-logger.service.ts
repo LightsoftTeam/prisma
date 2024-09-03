@@ -29,6 +29,11 @@ export class ApplicationLoggerService extends ConsoleLogger {
         this.appInsights.trackException({ exception: new Error(formattedMessage), properties: {} });
         super.error(message);
     }
+    critical(message: any) {
+        const formattedMessage = typeof message === 'string' ? message : JSON.stringify(message);
+        this.appInsights.trackException({ exception: new Error(formattedMessage), properties: {}, severity: SeverityLevel.Critical });
+        super.error(message);
+    }
     warn(message: any) {
         const formattedMessage = typeof message === 'string' ? message : JSON.stringify(message);
         this.appInsights.trackTrace({ message: formattedMessage, properties: {}, severity: SeverityLevel.Warning });
