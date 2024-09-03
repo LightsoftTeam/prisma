@@ -8,6 +8,7 @@ import { BrandsRepository } from './brands.repository';
 import { CategoriesRepository } from './categories.repository';
 import { EnterprisesRepository } from './enterprises.repository';
 import { UnitsRepository } from './units.repository';
+
 @Injectable()
 export class ProductsRepository extends Repository<Product> {
     constructor(

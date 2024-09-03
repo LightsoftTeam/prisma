@@ -2,14 +2,17 @@ import { Global, Module } from '@nestjs/common';
 import { DomainService } from './domain.service';
 import { DomainController } from './domain.controller';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { User, Brand, Category, Enterprise, Person, Product, Role, Sale, Subsidiary, Supplier, Ubigeo, Unit } from './entities';
+import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Sale, Subsidiary, Supplier, Ubigeo, Unit, StockMovement } from './entities';
 import { 
   BrandsRepository, 
   CategoriesRepository,
   EnterprisesRepository,
+  ErrorEventsRepository,
   PeopleRepository,
   ProductsRepository,
   RolesRepository,
+  SalesRepository,
+  StockMovementsRepository,
   SubsidiariesRepository,
   SuppliersRepository,
   UnitsRepository,
@@ -24,9 +27,12 @@ import {
     DomainService, 
     CategoriesRepository,
     EnterprisesRepository,
+    ErrorEventsRepository,
     PeopleRepository,
     ProductsRepository,
     RolesRepository,
+    SalesRepository,
+    StockMovementsRepository,
     SubsidiariesRepository,
     SuppliersRepository,
     UnitsRepository,
@@ -37,12 +43,14 @@ import {
       { dto: Brand },
       { dto: Category },
       { dto: Enterprise },
+      { dto: ErrorEvent },
       { dto: Person },
       { dto: Product },
       { dto: Role },
-      // { dto: Sale },
+      { dto: Sale },
       { dto: Subsidiary },
       { dto: Supplier },
+      { dto: StockMovement },
       // { dto: Ubigeo },
       { dto: Unit },
       { dto: User },

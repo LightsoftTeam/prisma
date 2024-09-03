@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { SqlQuerySpec, Container } from '@azure/cosmos';
+import type { SqlQuerySpec, Container, PartitionKey } from '@azure/cosmos';
+import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
+import { OperationInput } from '@azure/cosmos';
 
 
 @Injectable()
@@ -17,25 +19,16 @@ export class Repository<T> {
     }
 
     async findAll({
-        orderBy,
-        orderDirection
+        orderBy = 'createdAt',
+        orderDirection = 'DESC'
     }: {
         orderBy?: string;
         orderDirection?: 'ASC' | 'DESC';
     } = {}): Promise<T[]> {
         const querySpec = {
-            query: 'SELECT * FROM c WHERE NOT IS_DEFINED(c.deletedAt) ORDER BY c[@orderBy] @orderDirection',
-            parameters: [
-                {
-                    name: '@orderBy',
-                    value: orderBy ?? 'createdAt'
-                },
-                {
-                    name: '@orderDirection',
-                    value: orderDirection ?? 'DESC'
-                }
-            ],
+            query: `SELECT * FROM c WHERE NOT IS_DEFINED(c.deletedAt) ORDER BY c.${orderBy} ${orderDirection}`,
         };
+        console.log(querySpec);
         const { resources } = await this.container.items.query(querySpec).fetchAll();
         return resources;
     }
@@ -137,5 +130,40 @@ export class Repository<T> {
         }
         await this.container.item(id, entity[partitionKeyName] ?? entity.id).delete();
         return;
+    }
+
+    async selectAndFindByIds(ids: string[], fields: string[]){
+        const querySpec: SqlQuerySpec = {
+            query: `SELECT ${fields.map(f => 'c.' + f).join(',')} FROM c WHERE ARRAY_CONTAINS(@ids, c.id)`,
+            parameters: [
+                {
+                    name: '@ids',
+                    value: ids
+                }
+            ]
+        };
+        const { resources } = await this.container.items.query(querySpec).fetchAll();
+        return resources;
+    }
+
+    async updateInBatch(entities: T[], partitionKeyName?: string) {
+        if(entities.length === 0) throw new BadRequestException('No entities to update');
+        const partitionKey: PartitionKey = entities[0][partitionKeyName];
+        const operations = entities.map(entity => {
+            const resourceBody = JSON.parse(JSON.stringify(entity));
+            const operationInput: OperationInput = {
+                id: entity['id'],
+                operationType: 'Replace',
+                resourceBody: {
+                    ...resourceBody,
+                },
+                ifMatch: entity['_etag']               
+            };
+            return operationInput;
+        });
+        console.log(operations)
+        const {code, headers, diagnostics, result, substatus} = await this.container.items.batch(operations, partitionKey);
+        console.log({code, headers, diagnostics, result, substatus});
+        return { code, result };
     }
 }

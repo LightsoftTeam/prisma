@@ -1,20 +1,18 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
-import { Product } from './product.entity';
 
-export interface Item {
-    id: string;
+export enum Source{
+    SALE = 'sale',
+}
+
+@CosmosPartitionKey('subsidiaryId')
+export class StockMovement {
+    id?: string;
     productId: string;
     quantity: number;
-    salePrice: number;
-    product?: Partial<Product>; 
-}
-@CosmosPartitionKey('subsidiaryId')
-export class Sale {
-    id?: string;
-    total: number;
+    source: Source;
+    sourceId: string;
     subsidiaryId: string;
-    items: Item[];
-    userId: string;
+    remarks?: string;
     @CosmosDateTime() createdAt: Date;
     @CosmosDateTime() updatedAt?: Date;
     @CosmosDateTime() deletedAt?: Date;

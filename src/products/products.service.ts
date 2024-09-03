@@ -45,8 +45,14 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const product = await this.productsRepository.update(id, updateProductDto);
-    return this.toJson(product);
+    // const product = await this.productsRepository.update(id, updateProductDto);
+    // return this.toJson(product);
+    const product = await this.productsRepository.findById(id);
+    const updateproduct = {
+      ...product,
+      ...updateProductDto,
+    }
+    return this.productsRepository.updateInBatch([updateproduct], 'enterpriseId');
   }
 
   async toJson(payload: Product | Product[]) {

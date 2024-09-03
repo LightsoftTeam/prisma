@@ -117,6 +117,7 @@ export class UsersService {
   }
 
   getLoggedUser() {
+    this.logger.log('getting logged user');
     const loggedUser = this.request['loggedUser'] as User;
     if (!loggedUser) {
       throw new UnauthorizedException('Not logged in.');

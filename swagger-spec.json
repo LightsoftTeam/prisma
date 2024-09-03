@@ -232,6 +232,31 @@
         ]
       }
     },
+    "/api/subsidiaries": {
+      "get": {
+        "operationId": "SubsidiariesController_findAll",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id of resources to filter",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Subsidiaries"
+        ]
+      }
+    },
     "/api/enterprises": {
       "get": {
         "operationId": "EnterprisesController_findAll",
@@ -687,18 +712,35 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "The record has been successfully created."
           }
-        }
+        },
+        "tags": [
+          "Sales"
+        ]
       },
       "get": {
         "operationId": "SalesController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "required": true,
+            "in": "query",
+            "description": "The enterprise id of resources to filter",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The records has been successfully retrieved."
           }
-        }
+        },
+        "tags": [
+          "Sales"
+        ]
       }
     },
     "/api/sales/{id}": {
@@ -716,37 +758,12 @@
         ],
         "responses": {
           "200": {
-            "description": ""
-          }
-        }
-      },
-      "patch": {
-        "operationId": "SalesController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateSaleDto"
-              }
-            }
+            "description": "The record has been successfully retrieved."
           }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
+        "tags": [
+          "Sales"
+        ]
       },
       "delete": {
         "operationId": "SalesController_remove",
@@ -762,9 +779,12 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The record has been successfully deleted."
           }
-        }
+        },
+        "tags": [
+          "Sales"
+        ]
       }
     }
   },
@@ -1204,11 +1224,30 @@
       },
       "CreateSaleDto": {
         "type": "object",
-        "properties": {}
-      },
-      "UpdateSaleDto": {
-        "type": "object",
-        "properties": {}
+        "properties": {
+          "items": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subsidiaryId": {
+            "type": "string",
+            "description": "Subsidiary ID",
+            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total",
+            "example": 100
+          }
+        },
+        "required": [
+          "items",
+          "subsidiaryId",
+          "total"
+        ]
       }
     }
   }
