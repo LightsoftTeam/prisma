@@ -1,11 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { readFile } from 'fs';
+import { AppService } from './app.service';
 
 @ApiTags('v1')
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(
+    private readonly appService: AppService,
+  ) {}
 
   @Get('/swagger')
   getSwagger() {
@@ -17,5 +20,10 @@ export class AppController {
         resolve(JSON.parse(data));
       });
     });
+  }
+
+  @Post('test-update-in-batch')
+  testUpdateInBatch() {
+    return this.appService.testUpdateInBatch();
   }
 }

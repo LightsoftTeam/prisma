@@ -15,6 +15,20 @@
         ]
       }
     },
+    "/api/test-update-in-batch": {
+      "post": {
+        "operationId": "AppController_testUpdateInBatch",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1"
+        ]
+      }
+    },
     "/api/users": {
       "get": {
         "operationId": "UsersController_findAll",
@@ -723,10 +737,10 @@
         "operationId": "SalesController_findAll",
         "parameters": [
           {
-            "name": "enterpriseId",
+            "name": "subsidiaryId",
             "required": true,
             "in": "query",
-            "description": "The enterprise id of resources to filter",
+            "description": "The subsidiary id of resources to filter",
             "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
             "schema": {
               "type": "string"

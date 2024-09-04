@@ -20,7 +20,11 @@ export class KardexRepository extends Repository<Kardex> {
         this.logger.setContext(KardexRepository.name);
     }
 
-    async createStockMovements(stockMovements: Kardex[]) {
+    async createStockMovements(stockMovements: Kardex[]): Promise<void> {
+        if(stockMovements.length === 0) {
+            return;
+        }
+        const partitionKey = stockMovements[0].subsidiaryId;
         this.logger.log('Creating stock movements - kardex');
         const productIds = stockMovements.map(stockMovement => stockMovement.productId);
         this.logger.debug(`Product ids: ${productIds.join(', ')}`);
@@ -32,7 +36,7 @@ export class KardexRepository extends Repository<Kardex> {
         stockMovements.forEach(stockMovement => {
             const product = products.find(product => product.id === stockMovement.productId);
             const quantity = stockMovement.quantity;
-            if(product.stock + quantity < 0) {
+            if (product.stock + quantity < 0) {
                 throw new BadRequestException(ERRORS[ERROR_CODES.STOCK_IS_NOT_ENOUGH]);
             }
             product.stock += quantity;
@@ -40,19 +44,14 @@ export class KardexRepository extends Repository<Kardex> {
             stockMovement.id = id;
             stockMovementIds.push(id);
         });
-        const stockMovementsBatchResponse = await super.createInBatch(stockMovements, 'subsidiaryId');
+        await super.createInBatch(stockMovements, { partitionKeyName: 'subsidiaryId' });
         this.logger.log('Stock movements created');
-        this.logger.debug(stockMovementsBatchResponse);
         try {
-            const productsBatchResponse = await this.productsRepository.updateInBatch(products, 'enterpriseId');
+            await this.productsRepository.updateInBatch(products, { partitionKeyName: 'enterpriseId' });
             this.logger.log('Products updated');
-            this.logger.debug(productsBatchResponse);
         } catch (error) {
             this.logger.debug(`Error updating products ${error.message}, reverting stock movements creation`);
-            for (const id of stockMovementIds) {
-                //TODO: Implement destroyInBatch
-                super.destroy(id, 'subsidiaryId');
-            }
+            await super.destroyInBatch(stockMovementIds, partitionKey);
             throw error;
         }
     }

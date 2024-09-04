@@ -1,16 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { Movement, MovementType, SaleData } from 'src/domain/entities';
 import { v4 as uuidv4 } from 'uuid';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
 import { MovementsRepository, ProductsRepository } from 'src/domain/repositories';
 import { UsersService } from 'src/users/users.service';
 import { ErrorEventsRepository } from 'src/domain/repositories/error-events.repository';
 import { ErrorEvent } from 'src/domain/errors/error-event.error';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
+import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
 
-const BASIC_PRODUCT_FIELDS = ['id, name'];
+const BASIC_PRODUCT_FIELDS = ['id', 'name'];
 
 @Injectable()
 export class SalesService {
@@ -74,14 +74,15 @@ export class SalesService {
     }
   }
 
-  findAll(findSalesDto: FindByEnterpriseDto) {
-    const { enterpriseId } = findSalesDto;
-    return this.movementsRepository.findByEnterpriseId(enterpriseId);
+  findAll(findSalesDto: FindBySubsidiaryDto) {
+    const { subsidiaryId } = findSalesDto;
+    return this.movementsRepository.findBySubsidiaryId(subsidiaryId);
   }
 
   async findOne(id: string) {
-    const sale = await this.movementsRepository.findById(id);
-    return this.fill(sale);
+    this.logger.debug(`Finding movement - ${id}`);
+    const movement = await this.movementsRepository.findById(id);
+    return this.fill(movement);
   }
 
   // update(id: number, updateSaleDto: UpdateSaleDto) {
@@ -89,16 +90,20 @@ export class SalesService {
   // }
 
   remove(id: string) {
+    throw new InternalServerErrorException('Method not implemented.');
     return this.movementsRepository.delete(id);
   }
 
-  async fill(sale: Movement): Promise<Movement> {
-    const productIds = sale.items.map(item => item.productId);
+  async fill(movement: Movement): Promise<Movement> {
+    this.logger.debug(`Filling movement - ${movement.id}`);
+    const productIds = movement.items.map(item => item.productId);
+    this.logger.debug(`Product ids: ${productIds.join(', ')}`);
     const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
-    sale.items = sale.items.map(item => ({
+    this.logger.debug(`Products found: ${products.length}`);
+    movement.items = movement.items.map(item => ({
       ...item,
       product: products.find(product => product.id === item.productId)
     }));
-    return sale;
+    return movement;
   }
 }

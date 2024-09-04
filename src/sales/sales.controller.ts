@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 // import { UpdateSaleDto } from './dto/update-sale.dto';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
 
 @ApiTags('Sales')
 @Controller('sales')
@@ -21,7 +21,7 @@ export class SalesController {
   @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'The records has been successfully retrieved.'})
   @Get()
-  findAll(@Query() findSalesDto: FindByEnterpriseDto) {
+  findAll(@Query() findSalesDto: FindBySubsidiaryDto) {
     return this.salesService.findAll(findSalesDto);
   }
 
