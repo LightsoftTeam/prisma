@@ -1,19 +1,24 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
 
-export enum KardexFlowType {
+export enum CashBoxStatus {
+    OPEN = 'open',
+    CLOSED = 'closed',
+}
+
+export enum CashFlowType {
     INCOME = 'income',
     OUTCOME = 'outcome',
 }
 
 @CosmosPartitionKey('subsidiaryId')
-export class Kardex {
+export class CashBox {
     id?: string;
-    productId: string;
-    quantity: number;
-    movementId: string;
     subsidiaryId: string;
-    flowType: KardexFlowType;
-    remarks?: string;
+    name: string;
+    status: CashBoxStatus;
+    description?: string;
+    createdById: string;
+    responsableId: string;
     @CosmosDateTime() createdAt: Date;
     @CosmosDateTime() updatedAt?: Date;
     @CosmosDateTime() deletedAt?: Date;

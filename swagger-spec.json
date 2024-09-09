@@ -891,6 +891,107 @@
           "Customers"
         ]
       }
+    },
+    "/api/cash-boxes": {
+      "post": {
+        "operationId": "CashBoxesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCashBoxDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "cash-boxes"
+        ]
+      },
+      "get": {
+        "operationId": "CashBoxesController_findAll",
+        "parameters": [
+          {
+            "name": "subsidiaryId",
+            "required": true,
+            "in": "query",
+            "description": "The subsidiary id of resources to filter",
+            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "cash-boxes"
+        ]
+      }
+    },
+    "/api/cash-boxes/{id}": {
+      "patch": {
+        "operationId": "CashBoxesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCashBoxDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "cash-boxes"
+        ]
+      },
+      "delete": {
+        "operationId": "CashBoxesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "cash-boxes"
+        ]
+      }
     }
   },
   "info": {
@@ -1350,12 +1451,12 @@
           "paymentMethod": {
             "type": "string",
             "description": "Payment Method",
-            "example": "CASH",
+            "example": "cash",
             "enum": [
-              "CASH",
-              "CREDIT",
-              "DEBIT",
-              "TRANSFER"
+              "cash",
+              "credit",
+              "debit",
+              "transfer"
             ]
           },
           "customerId": {
@@ -1390,6 +1491,62 @@
           "enterpriseId",
           "personId"
         ]
+      },
+      "CreateCashBoxDto": {
+        "type": "object",
+        "properties": {
+          "subsidiaryId": {
+            "type": "string",
+            "description": "The subsidiary id where the cash box belongs",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the cash box",
+            "example": "Caja 1"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the cash box",
+            "example": "The main cash box"
+          },
+          "responsableId": {
+            "type": "string",
+            "description": "The id of the user responsible for the cash box",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        },
+        "required": [
+          "subsidiaryId",
+          "name",
+          "description",
+          "responsableId"
+        ]
+      },
+      "UpdateCashBoxDto": {
+        "type": "object",
+        "properties": {
+          "subsidiaryId": {
+            "type": "string",
+            "description": "The subsidiary id where the cash box belongs",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the cash box",
+            "example": "Caja 1"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the cash box",
+            "example": "The main cash box"
+          },
+          "responsableId": {
+            "type": "string",
+            "description": "The id of the user responsible for the cash box",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        }
       }
     }
   }

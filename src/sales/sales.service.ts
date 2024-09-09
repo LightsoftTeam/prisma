@@ -33,17 +33,17 @@ export class SalesService {
       const data: SaleData = {
         customerId,
         paymentMethod,
+        items: items.map(item => ({
+          ...item,
+          id: uuidv4()
+        })),
         total,
       }
       const movement: Movement = {
         ...movementData,
         type: MovementType.SALE,
-        userId: loggedUser.id,
+        createdById: loggedUser.id,
         data,
-        items: items.map(item => ({
-          ...item,
-          id: uuidv4()
-        })),
         createdAt: new Date(),
       };
       this.validate(movement);
@@ -66,8 +66,8 @@ export class SalesService {
   }
 
   private validate(movement: Movement) {
-    const { items, data } = movement;
-    const { total } = data;
+    const { data } = movement;
+    const { total, items } = data as SaleData;
     const itemsTotal = items.reduce((acc, item) => acc + item.quantity * item.salePrice, 0);
     if (total !== itemsTotal) {
       throw new BadRequestException(ERRORS[ERROR_CODES.TOTAL_INVALID]);
@@ -96,11 +96,12 @@ export class SalesService {
 
   async fill(movement: Movement): Promise<Movement> {
     this.logger.debug(`Filling movement - ${movement.id}`);
-    const productIds = movement.items.map(item => item.productId);
+    const data = movement.data as SaleData;
+    const productIds = data.items.map(item => item.productId);
     this.logger.debug(`Product ids: ${productIds.join(', ')}`);
     const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
     this.logger.debug(`Products found: ${products.length}`);
-    movement.items = movement.items.map(item => ({
+    data.items = data.items.map(item => ({
       ...item,
       product: products.find(product => product.id === item.productId)
     }));

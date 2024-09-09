@@ -21,6 +21,7 @@ import { SalesModule } from './sales/sales.module';
 import { DomainModule } from './domain/domain.module';
 import { CustomersModule } from './customers/customers.module';
 import { BrandsRepository } from './domain/repositories';
+import { CashBoxesModule } from './cash-boxes/cash-boxes.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { BrandsRepository } from './domain/repositories';
     SuppliersModule,
     SalesModule,
     CustomersModule,
+    CashBoxesModule,
   ],
   controllers: [AppController],
   providers: [AppService, BrandsRepository],

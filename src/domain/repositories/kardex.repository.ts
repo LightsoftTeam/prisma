@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/azure-database';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import type { Container } from '@azure/cosmos';
-import { Kardex } from '../entities';
+import { Kardex, KardexFlowType } from '../entities';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { Repository } from './repository';
 import { ProductsRepository } from './products.repository';
@@ -34,12 +34,13 @@ export class KardexRepository extends Repository<Kardex> {
         }
         const stockMovementIds = [];
         stockMovements.forEach(stockMovement => {
-            const product = products.find(product => product.id === stockMovement.productId);
-            const quantity = stockMovement.quantity;
-            if (product.stock + quantity < 0) {
+            const { flowType, quantity, productId } = stockMovement;
+            const product = products.find(product => product.id === productId);
+            const quantityWithFlow = flowType === KardexFlowType.INCOME ? quantity : -quantity;
+            if (product.stock + quantityWithFlow < 0) {
                 throw new BadRequestException(ERRORS[ERROR_CODES.STOCK_IS_NOT_ENOUGH]);
             }
-            product.stock += quantity;
+            product.stock += quantityWithFlow;
             const id = uuidv4();
             stockMovement.id = id;
             stockMovementIds.push(id);

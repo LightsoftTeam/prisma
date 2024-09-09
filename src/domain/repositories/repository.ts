@@ -167,7 +167,6 @@ export class Repository<T> {
             });
         };
         return this.executeBatch({ entities, getOperations, partitionKey, retries });
-
     }
 
     private async executeBatch({
