@@ -2,12 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import type { SqlQuerySpec, Container, PartitionKey, OperationResponse } from '@azure/cosmos';
 import { OperationInput, BulkOperationType } from '@azure/cosmos';
 import { ErrorEvent } from '../errors/error-event.error';
+import { wait } from 'src/common/helpers/wait.helper';
 
 const COSMOS_SUCCES_OPERATION_CODES = [200, 201, 202, 204, 207];
 const RETRIES_WHEN_ETAG_IS_NOT_THE_SAME = 3;
 const RETRY_DELAY = 1000;
+
+export interface COSMOS_ENTITY {
+    id?: string;
+}
 @Injectable()
-export class Repository<T> {
+export class Repository<T extends COSMOS_ENTITY> {
 
     container: Container;
 
@@ -76,7 +81,7 @@ export class Repository<T> {
                 }
             ]
         };
-        const { resources } = await this.container.items.query(querySpec).fetchAll();
+        const { resources } = await this.container.items.query<T>(querySpec).fetchAll();
         return resources.at(0) ?? null;
     }
 
@@ -100,7 +105,9 @@ export class Repository<T> {
         return resource;
     }
 
-    async update(id: string, payload: Partial<T>) {
+    async update(id: string, payload: Partial<T>, {
+        concurrencyRetryTimes = 2
+    }: {concurrencyRetryTimes?: number} = {}) {
         const entity = await this.findById(id);
         if (!entity) {
             throw new BadRequestException(`Entity with id ${id} not found`);
@@ -110,8 +117,29 @@ export class Repository<T> {
             ...payload,
             updatedAt: new Date()
         };
-        const { resource } = await this.container.item(id).replace(updatedEntity);
-        return resource;
+        let attemp = 0;
+        while (attemp < concurrencyRetryTimes) {
+            const { resource, statusCode } = await this.container.item(id).replace<T>(updatedEntity, {
+                accessCondition: {
+                    type: 'IfMatch',
+                    condition: entity['_etag']
+                }
+            });
+            console.log({statusCode});
+            if (statusCode === 200) {
+                return resource;
+            }
+            if(statusCode === 412) {
+                console.log('Error 412');
+                attemp++;
+                if (attemp >= concurrencyRetryTimes) {
+                    throw new ErrorEvent('The item has been changed by another process. Max retries reached. Update failed.', 500, resource);
+                }
+                console.log(`waiting ${RETRY_DELAY} ms`);
+                await wait(RETRY_DELAY);
+                console.log('retrying...');
+            }
+        }
     }
 
     async delete(id: string, partitionKeyName?: string): Promise<void> {
@@ -197,7 +225,7 @@ export class Repository<T> {
                     throw new ErrorEvent('Max retries reached. Update failed.', 500, result);
                 }
                 console.log(`waiting ${RETRY_DELAY} ms`);
-                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+                await wait(RETRY_DELAY);
                 console.log('retrying...');
             } else {
                 throw new ErrorEvent('Error in batch, http status code was 200 but operations not were successful', 500, result);

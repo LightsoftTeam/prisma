@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { DomainService } from './domain.service';
 import { DomainController } from './domain.controller';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Movement, Subsidiary, Supplier, Ubigeo, Unit, Kardex, Customer, CashBox } from './entities';
+import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Movement, Subsidiary, Supplier, Ubigeo, Unit, Kardex, Customer, CashBox, CashBoxTurn } from './entities';
 import { 
   BrandsRepository, 
   CategoriesRepository,
@@ -20,6 +20,7 @@ import {
   CustomersRepository,
   CashBoxesRepository
 } from './repositories';
+import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository';
 
 @Global()
 @Module({
@@ -29,6 +30,7 @@ import {
     DomainService, 
     CashBoxesRepository,
     CategoriesRepository,
+    CashBoxTurnsRepository,
     CustomersRepository,
     EnterprisesRepository,
     ErrorEventsRepository,
@@ -46,6 +48,7 @@ import {
     AzureCosmosDbModule.forFeature([
       { dto: Brand },
       { dto: CashBox },
+      { dto: CashBoxTurn },
       { dto: Category },
       { dto: Customer },
       { dto: Enterprise },

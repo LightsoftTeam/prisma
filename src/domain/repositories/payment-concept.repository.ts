@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { CashFlowType, PaymentConcept } from '../entities';
 
+const CASH_BOX_OPENING_CONCEPT_ID = '023e934f-12bd-4ba4-8c03-bea5b0854a09';
+const CASH_BOX_CLOSING_CONCEPT_ID = '64140673-c9ec-46e4-afe8-65991c711fa0';
+
 const PAYMENT_CONCEPTS: PaymentConcept[] = [
     {
         "id": "023e934f-12bd-4ba4-8c03-bea5b0854a09",
@@ -231,5 +234,13 @@ export class PaymentConceptsRepository {
 
     findByIds(ids: string[]) {
         return PAYMENT_CONCEPTS.filter(concept => ids.includes(concept.id));
+    }
+
+    getCashBoxOpeningConceptId(){
+        return CASH_BOX_OPENING_CONCEPT_ID;
+    }
+
+    getCashBoxClosingConceptId(){
+        return CASH_BOX_CLOSING_CONCEPT_ID;
     }
 }

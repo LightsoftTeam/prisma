@@ -1,4 +1,5 @@
 export * from './brand.entity';
+export * from './cash-box-turn.entity';
 export * from './cash-box.entity';
 export * from './category.entity';
 export * from './customer.entity';

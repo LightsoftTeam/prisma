@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsEnum, IsNumber, IsObject, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsNumber, IsUUID, ValidateNested } from "class-validator";
 import { PaymentMethod } from "src/domain/entities";
 
 export class ItemDto{

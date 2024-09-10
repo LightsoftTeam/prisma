@@ -31,6 +31,8 @@ export interface PurchaseData {
 
 export interface CashBoxMovementData {
     items: CashBoxMovementItem[];
+    paymentConceptId: string;
+    type: CashFlowType;
     total: number;
 }
 
@@ -52,8 +54,6 @@ export interface PurchaseItem {
 export interface CashBoxMovementItem {
     id: string;
     amount: number;
-    type: CashFlowType;
-    paymentConceptId: string;
     remarks?: string;
     createdAt: Date;
     updatedAt?: Date;

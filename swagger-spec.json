@@ -992,6 +992,45 @@
           "cash-boxes"
         ]
       }
+    },
+    "/api/cash-boxes/{id}/change-status": {
+      "post": {
+        "operationId": "CashBoxesController_changeCashBoxStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeCashBoxStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The cash box status has been changed successfully"
+          },
+          "400": {
+            "description": "BadRequest"
+          },
+          "404": {
+            "description": "Cash box not found"
+          }
+        },
+        "tags": [
+          "cash-boxes"
+        ]
+      }
     }
   },
   "info": {
@@ -1547,6 +1586,44 @@
             "example": "123e4567-e89b-12d3-a456-426614174000"
           }
         }
+      },
+      "ChangeCashBoxStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The new status of the cash box",
+            "example": "open",
+            "enum": [
+              "open",
+              "closed"
+            ]
+          },
+          "items": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total",
+            "example": 100
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Remarks of the movement",
+            "example": "Opening the cash box",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "items",
+          "total",
+          "remarks"
+        ]
       }
     }
   }
