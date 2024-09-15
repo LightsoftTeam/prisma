@@ -31,6 +31,6 @@ export class BrandsService {
   }
 
   async remove(id: string) {
-    return this.brandRepository.delete(id);
+    return this.brandRepository.delete(id, 'enterpriseId');
   }
 }
