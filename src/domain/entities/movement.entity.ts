@@ -10,16 +10,21 @@ export enum MovementType {
 
 export enum PaymentMethod {
     CASH = 'cash',
-    CREDIT = 'credit',
-    DEBIT = 'debit',
-    TRANSFER = 'transfer'
+    YAPE = 'yape',
+    PLIN = 'plin',
+    DEPOSIT = 'deposit',
+    OTHERS = 'others',
 }
-
 export interface SaleData {
     customerId: string;
-    paymentMethod: PaymentMethod;
+    paymentItems: PaymentItem[];
     total: number;
     items: SaleItem[];
+}
+
+export interface PaymentItem {
+    paymentMethod: PaymentMethod;
+    amount: number;
 }
 
 export interface PurchaseData {

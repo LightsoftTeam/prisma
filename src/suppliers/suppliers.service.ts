@@ -20,10 +20,23 @@ export class SuppliersService {
   }
 
   async create(createSupplierDto: CreateSupplierDto) {
-    return await this.suppliersRepository.create({
-      ...createSupplierDto,
-      createdAt: new Date(),
-    });
+    this.logger.debug(`Creating supplier ${createSupplierDto}`);
+
+    try {
+      const { person: personDto, enterpriseId } = createSupplierDto;
+      //TODO: check if person is already created
+      const person = await this.peopleRepository.create({...personDto, createdAt: new Date()});
+      const supplier: Supplier = {
+        enterpriseId,
+        personId: person.id,
+        createdAt: new Date(),
+      };
+      const newSupplier = await this.suppliersRepository.create(supplier);
+      return this.fill(newSupplier);
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
+    }
   }
 
   async findAll(findByEnterpriseDto: FindByEnterpriseDto) {
@@ -39,7 +52,7 @@ export class SuppliersService {
     const person = await this.peopleRepository.findById(supplier.personId);
     return {
       ...FormatCosmosItem.cleanDocument<Supplier>(supplier),
-      person,
+      person: FormatCosmosItem.cleanDocument(person),
     }
   }
 }

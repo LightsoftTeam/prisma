@@ -28,11 +28,11 @@ export class SalesService {
   async create(createSaleDto: CreateSaleDto) {
     try {
       this.logger.debug('Creating sale');
-      const { items, total, paymentMethod, customerId, ...movementData } = createSaleDto;
+      const { items, total, paymentItems, customerId, ...movementData } = createSaleDto;
       const loggedUser = this.usersService.getLoggedUser();
       const data: SaleData = {
         customerId,
-        paymentMethod,
+        paymentItems, 
         items: items.map(item => ({
           ...item,
           id: uuidv4()
@@ -67,9 +67,10 @@ export class SalesService {
 
   private validate(movement: Movement) {
     const { data } = movement;
-    const { total, items } = data as SaleData;
+    const { total, items, paymentItems } = data as SaleData;
     const itemsTotal = items.reduce((acc, item) => acc + item.quantity * item.salePrice, 0);
-    if (total !== itemsTotal) {
+    const paymentItemsTotal = paymentItems.reduce((acc, item) => acc + item.amount, 0);
+    if (total !== itemsTotal || total !== paymentItemsTotal) {
       throw new BadRequestException(ERRORS[ERROR_CODES.TOTAL_INVALID]);
     }
   }

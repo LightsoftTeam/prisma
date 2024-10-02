@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsUUID } from "class-validator";
+import { Type } from "class-transformer";
+import { IsObject, IsUUID, ValidateNested } from "class-validator";
+import { CreatePersonDto } from "src/people/dto/create-person.dto";
 
 export class CreateCustomerDto {
     @ApiProperty({
@@ -10,9 +12,12 @@ export class CreateCustomerDto {
     enterpriseId: string;
 
     @ApiProperty({
-        description: 'Person id',
-        example: '123e4567-e89b-12d3-a456-426614174000'
+        description: 'The person data of the user',
     })
-    @IsUUID()
-    personId: string;
+    @IsObject()
+    @Type(() => CreatePersonDto)
+    @ValidateNested({
+        each: true,
+    })
+    person: CreatePersonDto;
 }

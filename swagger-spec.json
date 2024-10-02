@@ -1451,10 +1451,13 @@
       "CreateSupplierDto": {
         "type": "object",
         "properties": {
-          "personId": {
-            "type": "string",
-            "description": "The id of the person",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            ]
           },
           "enterpriseId": {
             "type": "string",
@@ -1463,7 +1466,7 @@
           }
         },
         "required": [
-          "personId",
+          "person",
           "enterpriseId"
         ]
       },
@@ -1487,16 +1490,12 @@
             "description": "Total",
             "example": 100
           },
-          "paymentMethod": {
-            "type": "string",
-            "description": "Payment Method",
-            "example": "cash",
-            "enum": [
-              "cash",
-              "credit",
-              "debit",
-              "transfer"
-            ]
+          "paymentItems": {
+            "description": "Payment items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "customerId": {
             "type": "string",
@@ -1508,7 +1507,7 @@
           "items",
           "subsidiaryId",
           "total",
-          "paymentMethod",
+          "paymentItems",
           "customerId"
         ]
       },
@@ -1520,15 +1519,18 @@
             "description": "Enterprise id",
             "example": "123e4567-s89b-12d3-a456-426614174000"
           },
-          "personId": {
-            "type": "string",
-            "description": "Person id",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            ]
           }
         },
         "required": [
           "enterpriseId",
-          "personId"
+          "person"
         ]
       },
       "CreateCashBoxDto": {
