@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateCashBoxDto } from './dto/create-cash-box.dto';
 import { UpdateCashBoxDto } from './dto/update-cash-box.dto';
-import { CashBoxesRepository, MovementsRepository, PaymentConceptsRepository } from 'src/domain/repositories';
+import { CashBoxesRepository, MovementsRepository, PaymentConceptsRepository, UsersRepository } from 'src/domain/repositories';
 import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
 import { CashBox, CashBoxMovementData, CashBoxMovementItem, CashBoxStatus, CashBoxTurn, CashFlowType, Movement, MovementType } from 'src/domain/entities';
 import { UsersService } from '../users/users.service';
@@ -10,6 +10,7 @@ import { ChangeCashBoxStatusDto } from './dto/change-cash-box-status.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { CashBoxTurnsRepository } from 'src/domain/repositories/cash-box-turns.repository';
+import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
 
 @Injectable()
 export class CashBoxesService {
@@ -21,6 +22,7 @@ export class CashBoxesService {
     private readonly movementsRepository: MovementsRepository,
     private readonly cashBoxTurnsRepository: CashBoxTurnsRepository,
     private readonly paymentConceptsRepository: PaymentConceptsRepository,
+    private readonly usersRepository: UsersRepository,
   ) {
     this.logger.setContext(CashBoxesService.name);
   }
@@ -35,17 +37,28 @@ export class CashBoxesService {
     return this.cashBoxesRepository.create(cashBox);
   }
 
-  findAll(findCashBoxesDto: FindBySubsidiaryDto) {
+  async findAll(findCashBoxesDto: FindBySubsidiaryDto) {
     const { subsidiaryId } = findCashBoxesDto;
-    return this.cashBoxesRepository.findBySubsidiaryId(subsidiaryId);
+    const cashBoxes = await this.cashBoxesRepository.findBySubsidiaryId(subsidiaryId);
+    return Promise.all(cashBoxes.map(cashBox => this.fill(cashBox)));
   }
 
-  update(id: string, updateCashBoxDto: UpdateCashBoxDto) {
-    return this.cashBoxesRepository.update(id, updateCashBoxDto);
+  async findOne(id: string) {
+    const cashBox = await this.cashBoxesRepository.findById(id);
+    if (!cashBox) {
+      throw new NotFoundException('Cash box not found');
+    }
+    return this.fill(cashBox);
+  }
+
+  async update(id: string, updateCashBoxDto: UpdateCashBoxDto) {
+    const cashBox = await this.cashBoxesRepository.update(id, updateCashBoxDto);
+    return this.fill(cashBox);
   }
 
   remove(id: string) {
-    return this.cashBoxesRepository.delete(id, 'subsidiaryId');
+    this.cashBoxesRepository.delete(id, 'subsidiaryId');
+    return null;
   }
 
   async changeCashBoxStatus(id: string, changeCashBoxStatusDto: ChangeCashBoxStatusDto) {
@@ -139,7 +152,7 @@ export class CashBoxesService {
         await this.cashBoxTurnsRepository.destroy(newCashBoxTurn.id, 'cashBoxId');
         throw new InternalServerErrorException('Error updating cash box');
       }
-      return newCashBox;
+      return this.fill(newCashBox);
     } catch (error) {
       this.logger.critical(`Error changing cash box status: ${error.message}`);
       throw error;
@@ -151,5 +164,13 @@ export class CashBoxesService {
     if (itemsTotal !== total) {
       throw new BadRequestException(ERRORS[ERROR_CODES.TOTAL_INVALID]);
     }
+  }
+
+  private async fill(cashBox: CashBox) {
+    const responsable = await this.usersRepository.findById(cashBox.responsableId);
+    return {
+      ...FormatCosmosItem.cleanDocument(cashBox),
+      responsable: responsable ? FormatCosmosItem.cleanDocument(responsable, ['password']) : null,
+    };
   }
 }

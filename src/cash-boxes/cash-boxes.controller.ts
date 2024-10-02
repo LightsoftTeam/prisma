@@ -25,6 +25,12 @@ export class CashBoxesController {
   }
 
   @UseGuards(AuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.cashBoxesService.findOne(id);
+  }
+
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCashBoxDto: UpdateCashBoxDto) {
     return this.cashBoxesService.update(id, updateCashBoxDto);

@@ -25,7 +25,7 @@ export class SuppliersService {
     try {
       const { person: personDto, enterpriseId } = createSupplierDto;
       //TODO: check if person is already created
-      const person = await this.peopleRepository.create({...personDto, createdAt: new Date()});
+      const person = await this.peopleRepository.create({ ...personDto, createdAt: new Date() });
       const supplier: Supplier = {
         enterpriseId,
         personId: person.id,
