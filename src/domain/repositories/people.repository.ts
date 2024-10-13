@@ -17,8 +17,28 @@ export class PeopleRepository extends Repository<Person> {
 
     async create(person: Person){
         const {documentNumber, documentType, type} = person;
-        if(type === PersonType.JURIDICA && documentType !== DocumentType.RUC){
-            throw new BadRequestException(ERRORS[ERROR_CODES.INVALID_DOCUMENT_TYPE]);
+        if(type === PersonType.JURIDICA){
+            if(documentType !== DocumentType.RUC){
+                throw new BadRequestException(ERRORS[ERROR_CODES.INVALID_DOCUMENT_TYPE]);
+            }
+            if(!person.legalName){
+                throw new BadRequestException(ERRORS[ERROR_CODES.LEGAL_NAME_REQUIRED]);
+            }
+            if(person.givenNames || person.lastName){
+                delete person.givenNames;
+            delete person.lastName;
+            }
+        }
+        if(type === PersonType.NATURAL){
+            if(!person.givenNames || !person.lastName){
+                throw new BadRequestException(ERRORS[ERROR_CODES.GIVEN_NAMES_AND_LAST_NAME_REQUIRED]);
+            }
+            if(documentType === DocumentType.RUC){
+                throw new BadRequestException(ERRORS[ERROR_CODES.INVALID_DOCUMENT_TYPE]);
+            }
+            if(person.legalName){
+                delete person.legalName;
+            }
         }
         const existingPerson = await this.findByDocument({documentNumber, documentType});
         if(existingPerson){

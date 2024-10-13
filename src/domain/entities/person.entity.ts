@@ -15,8 +15,9 @@ export enum PersonType {
 @CosmosPartitionKey('id')
 export class Person {
     id?: string;
-    givenNames: string;
-    lastName: string;
+    givenNames?: string;
+    lastName?: string;
+    legalName?: string;
     address: string;
     email: string;
     phone: string;

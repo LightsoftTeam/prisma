@@ -1082,6 +1082,12 @@
             "description": "The last name of the person",
             "example": "Doe"
           },
+          "legalName": {
+            "type": "string",
+            "description": "The legal name of the person",
+            "example": "Jhon Doe S.A.C.",
+            "nullable": true
+          },
           "address": {
             "type": "string",
             "description": "The address of the person",
@@ -1122,6 +1128,7 @@
         "required": [
           "givenNames",
           "lastName",
+          "legalName",
           "address",
           "email",
           "phone",

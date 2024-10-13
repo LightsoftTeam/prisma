@@ -8,7 +8,7 @@ export class CreatePersonDto {
         example: 'Jhon',
     })
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     givenNames: string;
 
     @ApiProperty({
@@ -17,7 +17,17 @@ export class CreatePersonDto {
     })
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
     lastName: string;
+
+    @ApiProperty({
+        description: 'The legal name of the person',
+        example: 'Jhon Doe S.A.C.',
+        nullable: true,
+    })
+    @IsOptional()
+    @IsString()
+    legalName?: string;
 
     @ApiProperty({
         description: 'The address of the person',

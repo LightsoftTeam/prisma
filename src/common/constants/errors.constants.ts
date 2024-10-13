@@ -5,6 +5,8 @@ export enum ERROR_CODES {
     TOTAL_INVALID = 'TOTAL_INVALID',
     STOCK_IS_NOT_ENOUGH = 'STOCK_IS_NOT_ENOUGH',
     CASH_BOX_IS_ALREADY_IN_THE_REQUESTED_STATUS = 'CASH_BOX_IS_ALREADY_IN_THE_REQUESTED_STATUS',
+    LEGAL_NAME_REQUIRED = 'LEGAL_NAME_REQUIRED',
+    GIVEN_NAMES_AND_LAST_NAME_REQUIRED = 'GIVEN_NAMES_AND_LAST_NAME_REQUIRED',
 }
 
 export const ERRORS = {
@@ -31,5 +33,13 @@ export const ERRORS = {
     [ERROR_CODES.CASH_BOX_IS_ALREADY_IN_THE_REQUESTED_STATUS]: {
         code: ERROR_CODES.CASH_BOX_IS_ALREADY_IN_THE_REQUESTED_STATUS,
         message: 'Cash box is already in the requested status',
+    },
+    [ERROR_CODES.LEGAL_NAME_REQUIRED]: {
+        code: ERROR_CODES.LEGAL_NAME_REQUIRED,
+        message: 'Legal name is required',
+    },
+    [ERROR_CODES.GIVEN_NAMES_AND_LAST_NAME_REQUIRED]: {
+        code: ERROR_CODES.GIVEN_NAMES_AND_LAST_NAME_REQUIRED,
+        message: 'Given names and last name are required',
     },
 }

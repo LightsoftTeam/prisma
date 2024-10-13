@@ -32,6 +32,6 @@ export class CategoriesRepository extends Repository<Category> {
         //     throw new NotFoundException('Enterprise not found');
         // }
         // }
-        return this.create(category);
+        return super.create(category);
     }
 }
