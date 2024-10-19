@@ -246,6 +246,70 @@
         ]
       }
     },
+    "/api/roles/{id}/permissions": {
+      "post": {
+        "operationId": "RolesController_addPermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Add permission to role"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/api/roles/{roleId}/permissions/{permissionId}": {
+      "delete": {
+        "operationId": "RolesController_removePermission",
+        "parameters": [
+          {
+            "name": "roleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "permissionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "remove a permission"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
     "/api/subsidiaries": {
       "get": {
         "operationId": "SubsidiariesController_findAll",
@@ -1052,6 +1116,36 @@
           "cash-boxes"
         ]
       }
+    },
+    "/api/actions": {
+      "get": {
+        "operationId": "ActionsController_findAll",
+        "summary": "Get all actions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return all actions"
+          }
+        },
+        "tags": [
+          "Actions"
+        ]
+      }
+    },
+    "/api/modules": {
+      "get": {
+        "operationId": "ModulesController_findAll",
+        "summary": "Get all modules",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return all modules"
+          }
+        },
+        "tags": [
+          "Modules"
+        ]
+      }
     }
   },
   "info": {
@@ -1250,6 +1344,48 @@
         "required": [
           "username",
           "password"
+        ]
+      },
+      "AddPermissionDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Action name",
+            "example": "create",
+            "enum": [
+              "create",
+              "read",
+              "update",
+              "delete"
+            ]
+          },
+          "module": {
+            "type": "string",
+            "description": "Module name",
+            "example": "dashboard",
+            "enum": [
+              "dashboard",
+              "users",
+              "products",
+              "brands",
+              "units",
+              "warehouses",
+              "cashboxes",
+              "subsidiaries",
+              "tpv",
+              "sales",
+              "customers",
+              "purchases",
+              "suppliers",
+              "payment_concept",
+              "cash_movement"
+            ]
+          }
+        },
+        "required": [
+          "action",
+          "module"
         ]
       },
       "CreateCategoryDto": {
