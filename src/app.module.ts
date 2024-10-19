@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -24,6 +25,8 @@ import { BrandsRepository } from './domain/repositories';
 import { CashBoxesModule } from './cash-boxes/cash-boxes.module';
 import { ActionsModule } from './actions/actions.module';
 import { ModulesModule } from './modules/modules.module';
+import { GeneralInterceptor } from './common/interceptors/general.interceptor';
+import { ApplicationLoggerService } from './common/services/application-logger.service';
 
 @Module({
   imports: [
@@ -61,6 +64,8 @@ import { ModulesModule } from './modules/modules.module';
     ModulesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, BrandsRepository],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule { }

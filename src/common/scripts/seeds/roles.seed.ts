@@ -1,29 +1,29 @@
-import { RoleName } from '../../../domain/entities/role.entity';
+import { ObligatoryRoleName } from '../../../domain/entities/role.entity';
 
 export function getRoles() {
     const roles = [
         {
-            name: RoleName.SUPER_ADMIN,
+            name: ObligatoryRoleName.SUPER_ADMIN,
             createdAt: new Date(),
             permissions: [],
         },
         {
-            name: RoleName.ADMIN,
+            name: ObligatoryRoleName.ADMIN,
             createdAt: new Date(),
             permissions: [],
         },
         {
-            name: RoleName.CASHIER,
+            name: ObligatoryRoleName.CASHIER,
             createdAt: new Date(),
             permissions: [],
         },
         {
-            name: RoleName.WAREHOUSE_MANAGER,
+            name: ObligatoryRoleName.WAREHOUSE_MANAGER,
             createdAt: new Date(),
             permissions: [],
         },
         {
-            name: RoleName.ACCOUNTANT,
+            name: ObligatoryRoleName.ACCOUNTANT,
             createdAt: new Date(),
             permissions: [],
         }

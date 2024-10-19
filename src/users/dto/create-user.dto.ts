@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsObject, IsString, min, MinLength, ValidateNested } from "class-validator";
 import { CreatePersonDto } from "src/people/dto/create-person.dto";
-import { RoleName } from "src/domain/entities/role.entity";
+import { ObligatoryRoleName } from "src/domain/entities/role.entity";
 
 export class CreateUserDto {
     @ApiProperty({
@@ -29,14 +29,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     subsidiaryId: string;
 
-    // @ApiProperty({
-    //     description: 'The person id of the user',
-    //     example: 'f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b'
-    // })
-    // @IsString()
-    // @IsNotEmpty()
-    // personId: string;
-
     @ApiProperty({
         description: 'The person data of the user',
     })
@@ -49,10 +41,9 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'The role of the user',
-        example: RoleName.CASHIER,
-        enum: RoleName
+        example: 'admin',
     })
-    @IsEnum(RoleName)
+    @IsString()
     @IsNotEmpty()
-    roleName: RoleName;
+    roleId: string;
 }

@@ -66,7 +66,24 @@ import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository
     ]),
   ],
   exports: [
-    AzureCosmosDbModule
+    AzureCosmosDbModule,
+    BrandsRepository,
+    DomainService, 
+    CashBoxesRepository,
+    CategoriesRepository,
+    CashBoxTurnsRepository,
+    CustomersRepository,
+    EnterprisesRepository,
+    ErrorEventsRepository,
+    PeopleRepository,
+    ProductsRepository,
+    RolesRepository,
+    MovementsRepository,
+    KardexRepository,
+    SubsidiariesRepository,
+    SuppliersRepository,
+    UnitsRepository,
+    UsersRepository,
   ]
 })
 export class DomainModule { }

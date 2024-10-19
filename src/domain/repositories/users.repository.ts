@@ -27,4 +27,18 @@ export class UsersRepository extends Repository<User> {
         const users = await this.find(querySpec);
         return users.at(0) ?? null;
     }
+
+    async findCountUsersByRoleId(roleId: string): Promise<number> {
+        const querySpec = {
+            query: 'SELECT VALUE COUNT(1) FROM c WHERE c.roleId = @roleId',
+            parameters: [
+                {
+                    name: '@roleId',
+                    value: roleId,
+                },
+            ],
+        };
+        const { resources } = await this.usersContainer.items.query<number>(querySpec).fetchAll();
+        return resources.at(0);
+    }
 }

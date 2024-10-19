@@ -1,6 +1,6 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
 
-export enum RoleName{
+export enum ObligatoryRoleName{
     SUPER_ADMIN = 'super_admin',
     ADMIN = 'admin',
     CASHIER = 'cashier',
@@ -23,6 +23,9 @@ export enum Action{
     READ = 'read',
     UPDATE = 'update',
     DELETE = 'delete',
+    //asignar permiso
+    ASSIGN_PERMISSION = 'assign_permission',
+    UNASSIGN_PERMISSION = 'unassign_permission',
 }
 
 export enum Module{
@@ -41,12 +44,14 @@ export enum Module{
     SUPPLIERS = 'suppliers',
     PAYMENT_CONCEPT = 'payment_concept',
     CASH_MOVEMENT = 'cash_movement',
+    ROLES = 'roles',
 }
 
 @CosmosPartitionKey('id')
 export class Role {
     id?: string;
-    name: RoleName;
+    name: string;
     permissions: Permission[];
+    enterpriseId: string;
     @CosmosDateTime() createdAt: Date;
 }

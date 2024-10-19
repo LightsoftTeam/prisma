@@ -7,7 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { REQUEST } from '@nestjs/core';
 import { Person } from 'src/domain/entities/person.entity';
-import { RoleName } from 'src/domain/entities/role.entity';
+import { ObligatoryRoleName } from 'src/domain/entities/role.entity';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UsersRepository } from 'src/domain/repositories/users.repository';
@@ -80,9 +80,10 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto) {
     this.logger.log(`update user ${updateUserDto}`);
     const loggedUser = this.getLoggedUser();
-    if (loggedUser.id !== id && loggedUser.roleName !== RoleName.ADMIN) {
-      throw new UnauthorizedException('Unauthorized');
-    }
+    //TODO: comprobe permissions instead of role
+    // if (loggedUser.id !== id && loggedUser.roleName !== ObligatoryRoleName.ADMIN) {
+    //   throw new UnauthorizedException('Unauthorized');
+    // }
     const user = await this.usersRepository.findById(id);
     if(!user){
       throw new NotFoundException('User not found');
@@ -140,8 +141,9 @@ export class UsersService {
 
   revokeWhenIsNotAdmin() {
     const loggedUser = this.getLoggedUser();
-    if (!loggedUser || loggedUser.roleName !== RoleName.ADMIN) {
-      throw new UnauthorizedException('Unauthorized');
-    }
+    //TODO: comprobe permissions instead of role
+    // if (!loggedUser || loggedUser.roleName !== ObligatoryRoleName.ADMIN) {
+    //   throw new UnauthorizedException('Unauthorized');
+    // }
   }
 }

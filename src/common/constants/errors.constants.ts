@@ -8,6 +8,7 @@ export enum ERROR_CODES {
     LEGAL_NAME_REQUIRED = 'LEGAL_NAME_REQUIRED',
     GIVEN_NAMES_AND_LAST_NAME_REQUIRED = 'GIVEN_NAMES_AND_LAST_NAME_REQUIRED',
     PERMISSION_ALREADY_EXISTS = 'PERMISSION_ALREADY_EXISTS',
+    A_USER_HAS_THE_ROLE = 'A_USER_HAS_THE_ROLE',
 }
 
 export const ERRORS = {
@@ -46,5 +47,9 @@ export const ERRORS = {
     [ERROR_CODES.PERMISSION_ALREADY_EXISTS]: {
         code: ERROR_CODES.PERMISSION_ALREADY_EXISTS,
         message: 'The permission already exists',
+    },
+    [ERROR_CODES.A_USER_HAS_THE_ROLE]: {
+        code: ERROR_CODES.A_USER_HAS_THE_ROLE,
+        message: 'A user has the role, you can not delete it',
     },
 }

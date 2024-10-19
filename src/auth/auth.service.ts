@@ -49,7 +49,7 @@ export class AuthService {
       const enterprise = await this.enterprisesRepository.findById(subsidiary.enterpriseId);
       return {
         user: filledUser,
-        enterprise: FormatCosmosItem.cleanDocument(enterprise),
+        enterprise: FormatCosmosItem.cleanDocument(enterprise, ['roleIds']),
         subsidiary: FormatCosmosItem.cleanDocument(subsidiary),
         token,
       };

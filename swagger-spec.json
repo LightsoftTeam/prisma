@@ -232,7 +232,7 @@
         ]
       }
     },
-    "/api/roles": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/roles": {
       "get": {
         "operationId": "RolesController_findAll",
         "parameters": [],
@@ -244,9 +244,85 @@
         "tags": [
           "Roles"
         ]
+      },
+      "post": {
+        "operationId": "RolesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a role"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
       }
     },
-    "/api/roles/{id}/permissions": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/roles/{id}": {
+      "patch": {
+        "operationId": "RolesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update a role"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      },
+      "delete": {
+        "operationId": "RolesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete a role"
+          }
+        },
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/roles/{id}/permissions": {
       "post": {
         "operationId": "RolesController_addPermission",
         "parameters": [
@@ -279,7 +355,7 @@
         ]
       }
     },
-    "/api/roles/{roleId}/permissions/{permissionId}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/roles/{roleId}/permissions/{permissionId}": {
       "delete": {
         "operationId": "RolesController_removePermission",
         "parameters": [
@@ -1258,17 +1334,10 @@
               }
             ]
           },
-          "roleName": {
+          "roleId": {
             "type": "string",
             "description": "The role of the user",
-            "example": "cashier",
-            "enum": [
-              "super_admin",
-              "admin",
-              "cashier",
-              "warehouse_manager",
-              "accountant"
-            ]
+            "example": "admin"
           }
         },
         "required": [
@@ -1276,7 +1345,7 @@
           "password",
           "subsidiaryId",
           "person",
-          "roleName"
+          "roleId"
         ]
       },
       "UpdateUserDto": {
@@ -1305,17 +1374,10 @@
               }
             ]
           },
-          "roleName": {
+          "roleId": {
             "type": "string",
             "description": "The role of the user",
-            "example": "cashier",
-            "enum": [
-              "super_admin",
-              "admin",
-              "cashier",
-              "warehouse_manager",
-              "accountant"
-            ]
+            "example": "admin"
           },
           "isActive": {
             "type": "boolean",
@@ -1346,9 +1408,52 @@
           "password"
         ]
       },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Role name",
+            "example": "Admin"
+          },
+          "permissions": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "permissions"
+        ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Role name",
+            "example": "Admin"
+          },
+          "permissions": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "AddPermissionDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "The uuid of the permission",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
           "action": {
             "type": "string",
             "description": "Action name",
@@ -1357,7 +1462,9 @@
               "create",
               "read",
               "update",
-              "delete"
+              "delete",
+              "assign_permission",
+              "unassign_permission"
             ]
           },
           "module": {
@@ -1379,11 +1486,13 @@
               "purchases",
               "suppliers",
               "payment_concept",
-              "cash_movement"
+              "cash_movement",
+              "roles"
             ]
           }
         },
         "required": [
+          "id",
           "action",
           "module"
         ]

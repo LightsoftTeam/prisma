@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
-import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
+import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { Enterprise } from '../domain/entities/enterprise.entity';
 import { EnterprisesRepository } from 'src/domain/repositories/enterprises.repository';
 
 @Injectable()
@@ -16,6 +14,7 @@ export class EnterprisesService {
   }
 
   async findAll() {
-    return this.enterprisesRepository.findAll();
+    const enterprises = await this.enterprisesRepository.findAll();
+    return enterprises.map(enterprise => FormatCosmosItem.cleanDocument(enterprise, ['roleIds']));
   }
 }
