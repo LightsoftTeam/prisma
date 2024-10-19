@@ -51,13 +51,6 @@ export class CreateSaleDto {
     items: ItemDto[];
 
     @ApiProperty({
-        description: 'Subsidiary ID',
-        example: 'f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b'
-    })
-    @IsUUID()
-    subsidiaryId: string;
-
-    @ApiProperty({
         description: 'Total',
         example: 100
     })

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { PeopleService } from './people.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePersonDto } from './dto/create-person.dto';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('People')
-@Controller('people')
+@UseInterceptors(GeneralInterceptor)
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/people')
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 

@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CashBoxesService } from './cash-boxes.service';
 import { CreateCashBoxDto } from './dto/create-cash-box.dto';
 import { UpdateCashBoxDto } from './dto/update-cash-box.dto';
-import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { ChangeCashBoxStatusDto } from './dto/change-cash-box-status.dto';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('cash-boxes')
-@Controller('cash-boxes')
+@UseInterceptors(GeneralInterceptor)
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/cash-boxes')
 export class CashBoxesController {
   constructor(private readonly cashBoxesService: CashBoxesService) {}
 
@@ -20,8 +21,8 @@ export class CashBoxesController {
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query() findCashBoxesDto: FindBySubsidiaryDto) {
-    return this.cashBoxesService.findAll(findCashBoxesDto);
+  findAll() {
+    return this.cashBoxesService.findAll();
   }
 
   @UseGuards(AuthGuard)

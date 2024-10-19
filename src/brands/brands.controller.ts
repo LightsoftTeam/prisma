@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { FindBrandsDto } from './dto/find-brands.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Brands')
-@Controller('brands')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/brands')
+@UseInterceptors(GeneralInterceptor)
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
@@ -16,8 +17,8 @@ export class BrandsController {
   }
 
   @Get()
-  findAll(@Query() findBrandsDto: FindBrandsDto) {
-    return this.brandsService.findAll(findBrandsDto);
+  findAll() {
+    return this.brandsService.findAll();
   }
 
   @Patch(':id')

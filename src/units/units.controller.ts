@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { UnitsService } from './units.service';
 // import { CreateUnitDto } from './dto/create-unit.dto';
 // import { UpdateUnitDto } from './dto/update-unit.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Units')
-@Controller('units')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/units')
+@UseInterceptors(GeneralInterceptor)
 export class UnitsController {
   constructor(private readonly unitsService: UnitsService) {}
 

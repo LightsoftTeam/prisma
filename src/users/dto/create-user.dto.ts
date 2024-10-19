@@ -22,14 +22,6 @@ export class CreateUserDto {
     password: string;
 
     @ApiProperty({
-        description: 'The subsidiary id of the user',
-        example: 'f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b'
-    })
-    @IsString()
-    @IsNotEmpty()
-    subsidiaryId: string;
-
-    @ApiProperty({
         description: 'The person data of the user',
     })
     @IsObject()

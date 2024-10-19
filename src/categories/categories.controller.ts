@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseInterceptors } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { FindCategoriesDto } from './dto/find-categories.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
-@Controller('categories')
+@ApiTags('Categories')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/categories')
+@UseInterceptors(GeneralInterceptor)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -14,8 +17,8 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll(@Query() findCategoriesDto: FindCategoriesDto) {
-    return this.categoriesService.findAll(findCategoriesDto);
+  findAll() {
+    return this.categoriesService.findAll();
   }
 
   // @Get(':id')

@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpCode, HttpStatus, UseGuards, Request, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthGuard, LoggedUser } from './guards/auth.guard';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/auth')
+@UseInterceptors(GeneralInterceptor)
 export class AuthController {
   constructor(
     private readonly authService: AuthService,

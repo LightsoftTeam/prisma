@@ -1,10 +1,12 @@
 import { AzureStorageFileInterceptor, AzureStorageService, UploadedFileMetadata } from '@nestjs/azure-storage';
 import { Body, Controller, HttpCode, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 
 @ApiTags('Storage')
-@Controller('storage')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/storage')
+@UseInterceptors(GeneralInterceptor)
 export class StorageController {
 
     constructor(

@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { SubsidiariesRepository } from 'src/domain/repositories';
 
 @Injectable()
@@ -7,9 +7,10 @@ export class SubsidiariesService {
 
   constructor(
     private readonly subsidiariesRepository: SubsidiariesRepository,
+    @Inject(REQUEST) private readonly request: any,
   ) {}
 
-  findAll(findSubsidiariesDto: FindByEnterpriseDto) {
-    return this.subsidiariesRepository.findByEnterpriseId(findSubsidiariesDto.enterpriseId);
+  findAll() {
+    return this.subsidiariesRepository.findByEnterpriseId(this.request.enterpriseId);
   }
 }

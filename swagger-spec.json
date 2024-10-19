@@ -29,22 +29,11 @@
         ]
       }
     },
-    "/api/users": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/users": {
       "get": {
         "operationId": "UsersController_findAll",
         "summary": "Get users",
-        "parameters": [
-          {
-            "name": "subsidiaryId",
-            "required": true,
-            "in": "query",
-            "description": "The subsidiary id to filter users",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Return all users"
@@ -84,7 +73,7 @@
         ]
       }
     },
-    "/api/users/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/users/{id}": {
       "patch": {
         "operationId": "UsersController_update",
         "summary": "Update a user",
@@ -152,7 +141,7 @@
         ]
       }
     },
-    "/api/auth/login": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/auth/login": {
       "post": {
         "operationId": "AuthController_signIn",
         "parameters": [],
@@ -179,7 +168,7 @@
         ]
       }
     },
-    "/api/auth/authenticate": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/auth/authenticate": {
       "get": {
         "operationId": "AuthController_getAuthenticatedUser",
         "parameters": [],
@@ -196,7 +185,7 @@
         ]
       }
     },
-    "/api/storage/upload": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/storage/upload": {
       "post": {
         "operationId": "StorageController_upload",
         "summary": "Upload a file",
@@ -386,21 +375,10 @@
         ]
       }
     },
-    "/api/subsidiaries": {
+    "/api/enterprises/{enterpriseId}/subsidiaries": {
       "get": {
         "operationId": "SubsidiariesController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The enterprise id of resources to filter",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -425,7 +403,7 @@
         ]
       }
     },
-    "/api/people": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/people": {
       "get": {
         "operationId": "PeopleController_findAll",
         "parameters": [],
@@ -439,7 +417,7 @@
         ]
       }
     },
-    "/api/people/create": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/people/create": {
       "post": {
         "operationId": "PeopleController_create",
         "parameters": [],
@@ -463,7 +441,7 @@
         ]
       }
     },
-    "/api/categories": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/categories": {
       "post": {
         "operationId": "CategoriesController_create",
         "parameters": [],
@@ -481,30 +459,25 @@
           "201": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Categories"
+        ]
       },
       "get": {
         "operationId": "CategoriesController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The id of the enterprise",
-            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Categories"
+        ]
       }
     },
-    "/api/categories/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/categories/{id}": {
       "patch": {
         "operationId": "CategoriesController_update",
         "parameters": [
@@ -531,7 +504,10 @@
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Categories"
+        ]
       },
       "delete": {
         "operationId": "CategoriesController_remove",
@@ -549,10 +525,13 @@
           "204": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Categories"
+        ]
       }
     },
-    "/api/units": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/units": {
       "get": {
         "operationId": "UnitsController_findAll",
         "parameters": [],
@@ -566,7 +545,7 @@
         ]
       }
     },
-    "/api/brands": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/brands": {
       "post": {
         "operationId": "BrandsController_create",
         "parameters": [],
@@ -591,18 +570,7 @@
       },
       "get": {
         "operationId": "BrandsController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The enterprise id to filter brands",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -613,7 +581,7 @@
         ]
       }
     },
-    "/api/brands/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/brands/{id}": {
       "patch": {
         "operationId": "BrandsController_update",
         "parameters": [
@@ -667,7 +635,7 @@
         ]
       }
     },
-    "/api/products": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/products": {
       "post": {
         "operationId": "ProductsController_create",
         "parameters": [],
@@ -692,18 +660,7 @@
       },
       "get": {
         "operationId": "ProductsController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The enterprise id to filter products",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Get all products"
@@ -714,7 +671,7 @@
         ]
       }
     },
-    "/api/products/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/products/{id}": {
       "get": {
         "operationId": "ProductsController_findOne",
         "parameters": [
@@ -789,7 +746,7 @@
         ]
       }
     },
-    "/api/suppliers": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/suppliers": {
       "post": {
         "operationId": "SuppliersController_create",
         "parameters": [],
@@ -807,30 +764,25 @@
           "201": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ]
       },
       "get": {
         "operationId": "SuppliersController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The enterprise id of resources to filter",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ]
       }
     },
-    "/api/suppliers/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/suppliers/{id}": {
       "delete": {
         "operationId": "SuppliersController_remove",
         "parameters": [
@@ -847,10 +799,13 @@
           "200": {
             "description": ""
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ]
       }
     },
-    "/api/sales": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/sales": {
       "post": {
         "operationId": "SalesController_create",
         "parameters": [],
@@ -875,18 +830,7 @@
       },
       "get": {
         "operationId": "SalesController_findAll",
-        "parameters": [
-          {
-            "name": "subsidiaryId",
-            "required": true,
-            "in": "query",
-            "description": "The subsidiary id of resources to filter",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "The records has been successfully retrieved."
@@ -897,7 +841,7 @@
         ]
       }
     },
-    "/api/sales/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/sales/{id}": {
       "get": {
         "operationId": "SalesController_findOne",
         "parameters": [
@@ -941,7 +885,7 @@
         ]
       }
     },
-    "/api/customers": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/customers": {
       "post": {
         "operationId": "CustomersController_create",
         "parameters": [],
@@ -966,18 +910,7 @@
       },
       "get": {
         "operationId": "CustomersController_findAll",
-        "parameters": [
-          {
-            "name": "enterpriseId",
-            "required": true,
-            "in": "query",
-            "description": "The enterprise id of resources to filter",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "The records has been successfully retrieved."
@@ -988,7 +921,7 @@
         ]
       }
     },
-    "/api/customers/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/customers/{id}": {
       "get": {
         "operationId": "CustomersController_findOne",
         "parameters": [
@@ -1032,7 +965,7 @@
         ]
       }
     },
-    "/api/cash-boxes": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/cash-boxes": {
       "post": {
         "operationId": "CashBoxesController_create",
         "parameters": [],
@@ -1057,18 +990,7 @@
       },
       "get": {
         "operationId": "CashBoxesController_findAll",
-        "parameters": [
-          {
-            "name": "subsidiaryId",
-            "required": true,
-            "in": "query",
-            "description": "The subsidiary id of resources to filter",
-            "example": "f7b9e3b0-4b7b-4b7b-8b7b-4b7b7b7b7b7b",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -1079,7 +1001,7 @@
         ]
       }
     },
-    "/api/cash-boxes/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/cash-boxes/{id}": {
       "get": {
         "operationId": "CashBoxesController_findOne",
         "parameters": [
@@ -1154,7 +1076,7 @@
         ]
       }
     },
-    "/api/cash-boxes/{id}/change-status": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/cash-boxes/{id}/change-status": {
       "post": {
         "operationId": "CashBoxesController_changeCashBoxStatus",
         "parameters": [
@@ -1193,7 +1115,7 @@
         ]
       }
     },
-    "/api/actions": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/actions": {
       "get": {
         "operationId": "ActionsController_findAll",
         "summary": "Get all actions",
@@ -1208,7 +1130,7 @@
         ]
       }
     },
-    "/api/modules": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/modules": {
       "get": {
         "operationId": "ModulesController_findAll",
         "summary": "Get all modules",
@@ -1321,11 +1243,6 @@
             "description": "The password of the user",
             "example": "password"
           },
-          "subsidiaryId": {
-            "type": "string",
-            "description": "The subsidiary id of the user",
-            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
-          },
           "person": {
             "description": "The person data of the user",
             "allOf": [
@@ -1343,7 +1260,6 @@
         "required": [
           "username",
           "password",
-          "subsidiaryId",
           "person",
           "roleId"
         ]
@@ -1360,11 +1276,6 @@
             "type": "string",
             "description": "The password of the user",
             "example": "password"
-          },
-          "subsidiaryId": {
-            "type": "string",
-            "description": "The subsidiary id of the user",
-            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
           },
           "person": {
             "description": "The person data of the user",
@@ -1505,11 +1416,6 @@
             "description": "The name of the category",
             "example": "Category 1"
           },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id",
-            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
-          },
           "parentId": {
             "type": "string",
             "description": "The parent category id",
@@ -1518,7 +1424,6 @@
         },
         "required": [
           "name",
-          "enterpriseId",
           "parentId"
         ]
       },
@@ -1529,11 +1434,6 @@
             "type": "string",
             "description": "The name of the category",
             "example": "Category 1"
-          },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id",
-            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
           },
           "parentId": {
             "type": "string",
@@ -1550,11 +1450,6 @@
             "description": "The name of the brand",
             "example": "Nike"
           },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id of the brand",
-            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
-          },
           "description": {
             "type": "string",
             "description": "The description of the brand",
@@ -1570,7 +1465,6 @@
         },
         "required": [
           "name",
-          "enterpriseId",
           "description",
           "image"
         ]
@@ -1582,11 +1476,6 @@
             "type": "string",
             "description": "The name of the brand",
             "example": "Nike"
-          },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id of the brand",
-            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
           },
           "description": {
             "type": "string",
@@ -1609,11 +1498,6 @@
             "type": "string",
             "description": "The name of the product",
             "example": "Product 1"
-          },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id",
-            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
           },
           "description": {
             "type": "string",
@@ -1653,7 +1537,6 @@
         },
         "required": [
           "name",
-          "enterpriseId",
           "description",
           "purchasePrice",
           "salePrice",
@@ -1670,11 +1553,6 @@
             "type": "string",
             "description": "The name of the product",
             "example": "Product 1"
-          },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The enterprise id",
-            "example": "DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A"
           },
           "description": {
             "type": "string",
@@ -1731,16 +1609,10 @@
                 "$ref": "#/components/schemas/CreatePersonDto"
               }
             ]
-          },
-          "enterpriseId": {
-            "type": "string",
-            "description": "The id of the enterprise",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
           }
         },
         "required": [
-          "person",
-          "enterpriseId"
+          "person"
         ]
       },
       "CreateSaleDto": {
@@ -1752,11 +1624,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "subsidiaryId": {
-            "type": "string",
-            "description": "Subsidiary ID",
-            "example": "f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
           },
           "total": {
             "type": "number",
@@ -1778,7 +1645,6 @@
         },
         "required": [
           "items",
-          "subsidiaryId",
           "total",
           "paymentItems",
           "customerId"
@@ -1787,11 +1653,6 @@
       "CreateCustomerDto": {
         "type": "object",
         "properties": {
-          "enterpriseId": {
-            "type": "string",
-            "description": "Enterprise id",
-            "example": "123e4567-s89b-12d3-a456-426614174000"
-          },
           "person": {
             "description": "The person data of the user",
             "allOf": [
@@ -1802,18 +1663,12 @@
           }
         },
         "required": [
-          "enterpriseId",
           "person"
         ]
       },
       "CreateCashBoxDto": {
         "type": "object",
         "properties": {
-          "subsidiaryId": {
-            "type": "string",
-            "description": "The subsidiary id where the cash box belongs",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
-          },
           "name": {
             "type": "string",
             "description": "The name of the cash box",
@@ -1831,7 +1686,6 @@
           }
         },
         "required": [
-          "subsidiaryId",
           "name",
           "description",
           "responsableId"
@@ -1840,11 +1694,6 @@
       "UpdateCashBoxDto": {
         "type": "object",
         "properties": {
-          "subsidiaryId": {
-            "type": "string",
-            "description": "The subsidiary id where the cash box belongs",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
-          },
           "name": {
             "type": "string",
             "description": "The name of the cash box",

@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Customers')
-@Controller('customers')
+@UseInterceptors(GeneralInterceptor)
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
@@ -21,8 +22,8 @@ export class CustomersController {
   @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'The records has been successfully retrieved.' })
   @Get()
-  findAll(@Query() findCustomersDto: FindByEnterpriseDto) {
-    return this.customersService.findAll(findCustomersDto);
+  findAll() {
+    return this.customersService.findAll();
   }
 
   @UseGuards(AuthGuard)

@@ -3,13 +3,6 @@ import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateCashBoxDto {
     @ApiProperty({
-        description: 'The subsidiary id where the cash box belongs',
-        example: '123e4567-e89b-12d3-a456-426614174000'
-    })
-    @IsUUID()
-    subsidiaryId: string;
-
-    @ApiProperty({
         description: 'The name of the cash box',
         example: 'Caja 1'
     })

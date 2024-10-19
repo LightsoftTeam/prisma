@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { BrandsRepository } from '../domain/repositories/brands.repository';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class BrandsService {
@@ -11,6 +11,7 @@ export class BrandsService {
   constructor(
     private readonly logger: ApplicationLoggerService,
     private readonly brandRepository: BrandsRepository,
+    @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(BrandsService.name);
   }
@@ -18,12 +19,13 @@ export class BrandsService {
   async create(createBrandDto: CreateBrandDto) {
     return this.brandRepository.create({
       ...createBrandDto,
+      enterpriseId: this.request.enterpriseId,
       createdAt: new Date(),
     });
   }
 
-  async findAll({enterpriseId}: FindByEnterpriseDto) {
-    return this.brandRepository.findByEnterpriseId(enterpriseId);
+  async findAll() {
+    return this.brandRepository.findByEnterpriseId(this.request.enterpriseId);
   }
 
   async update(id: string, updateBrandDto: UpdateBrandDto) {

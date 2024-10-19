@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('suppliers')
+@ApiTags('Suppliers')
+@UseInterceptors(GeneralInterceptor)
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
@@ -14,8 +16,8 @@ export class SuppliersController {
   }
 
   @Get()
-  findAll(@Query() findByEnterpriseDto: FindByEnterpriseDto) {
-    return this.suppliersService.findAll(findByEnterpriseDto);
+  findAll() {
+    return this.suppliersService.findAll();
   }
 
   @Delete(':id')

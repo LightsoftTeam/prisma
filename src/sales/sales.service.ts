@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { Movement, MovementType, SaleData } from 'src/domain/entities';
@@ -8,7 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import { ErrorEventsRepository } from 'src/domain/repositories/error-events.repository';
 import { ErrorEvent } from 'src/domain/errors/error-event.error';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
-import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
+import { REQUEST } from '@nestjs/core';
 
 const BASIC_PRODUCT_FIELDS = ['id', 'name'];
 
@@ -21,6 +21,7 @@ export class SalesService {
     private readonly errorEventsRepository: ErrorEventsRepository,
     private readonly usersService: UsersService,
     private readonly movementsRepository: MovementsRepository,
+    @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(SalesService.name);
   }
@@ -41,6 +42,7 @@ export class SalesService {
       }
       const movement: Movement = {
         ...movementData,
+        subsidiaryId: this.request.subsidiaryId,
         type: MovementType.SALE,
         createdById: loggedUser.id,
         data,
@@ -75,9 +77,8 @@ export class SalesService {
     }
   }
 
-  findAll(findSalesDto: FindBySubsidiaryDto) {
-    const { subsidiaryId } = findSalesDto;
-    return this.movementsRepository.findBySubsidiaryId(subsidiaryId);
+  findAll() {
+    return this.movementsRepository.findBySubsidiaryId(this.request.subsidiaryId);
   }
 
   async findOne(id: string) {

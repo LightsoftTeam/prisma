@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from '../domain/entities/category.entity';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
-import { FindCategoriesDto } from './dto/find-categories.dto';
 import { CategoriesRepository } from 'src/domain/repositories/categories.repository';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class CategoriesService {
@@ -13,21 +13,22 @@ export class CategoriesService {
   constructor(
     private readonly categoriesRepository: CategoriesRepository,
     private readonly logger: ApplicationLoggerService,
+    @Inject(REQUEST) private readonly request: any,
   ) { }
 
   async create(createCategoryDto: CreateCategoryDto) {
     this.logger.log('Creating a new category');
     const category: Category = {
       ...createCategoryDto,
+      enterpriseId: this.request.enterpriseId,
       createdAt: new Date(),
     }
     const newCategory = await this.categoriesRepository.create(category);
     return this.fill(newCategory);
   }
 
-  async findAll({ enterpriseId }: FindCategoriesDto) {
-    this.logger.log(`Getting all categories - ${enterpriseId}`);
-    const categories = await this.categoriesRepository.findByEnterpriseId(enterpriseId);
+  async findAll() {
+    const categories = await this.categoriesRepository.findByEnterpriseId(this.request.enterpriseId);
     return this.flattenCategories(categories);
   }
 

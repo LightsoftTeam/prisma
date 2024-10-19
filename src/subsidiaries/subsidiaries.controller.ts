@@ -1,15 +1,16 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { SubsidiariesService } from './subsidiaries.service';
 import { ApiTags } from '@nestjs/swagger';
-import { FindByEnterpriseDto } from 'src/common/dto/find-by-enterprise.dto';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Subsidiaries')
-@Controller('subsidiaries')
+@Controller('enterprises/:enterpriseId/subsidiaries')
+@UseInterceptors(GeneralInterceptor)
 export class SubsidiariesController {
   constructor(private readonly subsidiariesService: SubsidiariesService) { }
 
   @Get()
-  findAll(@Query() findSubsidiariesDto: FindByEnterpriseDto) {
-    return this.subsidiariesService.findAll(findSubsidiariesDto);
+  findAll() {
+    return this.subsidiariesService.findAll();
   }
 }

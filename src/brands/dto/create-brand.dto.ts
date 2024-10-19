@@ -11,14 +11,6 @@ export class CreateBrandDto {
     name: string;
 
     @ApiProperty({
-        description: 'The enterprise id of the brand',
-        example: 'f7b1b3b0-1b1b-4b1b-8b1b-1b1b1b1b1b1b',
-    })
-    @IsNotEmpty()
-    @IsUUID()
-    enterpriseId: string;
-
-    @ApiProperty({
         description: 'The description of the brand',
         example: 'Just do it',
         nullable: true,

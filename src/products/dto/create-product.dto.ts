@@ -11,13 +11,6 @@ export class CreateProductDto {
     name: string;
 
     @ApiProperty({
-        description: 'The enterprise id',
-        example: 'DA23F4A3-4F3A-4F3A-4F3A-4F3A4F3A4F3A',
-    })
-    @IsUUID()
-    enterpriseId: string;
-
-    @ApiProperty({
         description: 'The code of the product',
         example: 'P001',
     })

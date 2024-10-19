@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateCashBoxDto } from './dto/create-cash-box.dto';
 import { UpdateCashBoxDto } from './dto/update-cash-box.dto';
 import { CashBoxesRepository, MovementsRepository, PaymentConceptsRepository, UsersRepository } from 'src/domain/repositories';
-import { FindBySubsidiaryDto } from 'src/common/dto/find-by-sucursal.dto';
 import { CashBox, CashBoxMovementData, CashBoxMovementItem, CashBoxStatus, CashBoxTurn, CashFlowType, Movement, MovementType } from 'src/domain/entities';
 import { UsersService } from '../users/users.service';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
@@ -11,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { CashBoxTurnsRepository } from 'src/domain/repositories/cash-box-turns.repository';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class CashBoxesService {
@@ -23,6 +23,7 @@ export class CashBoxesService {
     private readonly cashBoxTurnsRepository: CashBoxTurnsRepository,
     private readonly paymentConceptsRepository: PaymentConceptsRepository,
     private readonly usersRepository: UsersRepository,
+    @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(CashBoxesService.name);
   }
@@ -30,6 +31,7 @@ export class CashBoxesService {
   create(createCashBoxDto: CreateCashBoxDto) {
     const cashBox: CashBox = {
       ...createCashBoxDto,
+      subsidiaryId: this.request.subsidiaryId,
       status: CashBoxStatus.CLOSED,
       createdById: this.usersService.getLoggedUser().id,
       createdAt: new Date(),
@@ -37,9 +39,8 @@ export class CashBoxesService {
     return this.cashBoxesRepository.create(cashBox);
   }
 
-  async findAll(findCashBoxesDto: FindBySubsidiaryDto) {
-    const { subsidiaryId } = findCashBoxesDto;
-    const cashBoxes = await this.cashBoxesRepository.findBySubsidiaryId(subsidiaryId);
+  async findAll() {
+    const cashBoxes = await this.cashBoxesRepository.findBySubsidiaryId(this.request.subsidiaryId);
     return Promise.all(cashBoxes.map(cashBox => this.fill(cashBox)));
   }
 

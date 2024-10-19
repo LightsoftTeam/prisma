@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from '../domain/entities/product.entity';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
-import { FindProductsDto } from './dto/find-products.dto';
 import { ProductsRepository } from 'src/domain/repositories/products.repository';
 import { CategoriesRepository } from '../domain/repositories/categories.repository';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class ProductsService {
@@ -15,6 +15,7 @@ export class ProductsService {
     private readonly productsRepository: ProductsRepository,
     private readonly logger: ApplicationLoggerService,
     private readonly categoriesRepository: CategoriesRepository,
+    @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(ProductsService.name);
   }
@@ -23,6 +24,7 @@ export class ProductsService {
     this.logger.debug(`create product - ${JSON.stringify(createProductDto)}`);
     const newProduct: Product = {
       ...createProductDto,
+      enterpriseId: this.request.enterpriseId,
       isActive: true,
       code: await this.productsRepository.getLastCode(),
       stock: 0,
@@ -31,8 +33,8 @@ export class ProductsService {
     return this.productsRepository.create(newProduct);
   }
 
-  async findAll(findProductsDto: FindProductsDto) {
-    const products = await this.productsRepository.findByEnterpriseId(findProductsDto.enterpriseId);
+  async findAll() {
+    const products = await this.productsRepository.findByEnterpriseId(this.request.enterpriseId);
     return this.toJson(products);
   }
 

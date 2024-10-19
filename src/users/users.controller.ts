@@ -1,13 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { FindUsersDto } from './dto/find-users.dto';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Users')
-@Controller('users')
+@UseInterceptors(GeneralInterceptor)
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/users')
 export class UsersController {
   constructor(private readonly userService: UsersService) { }
 
@@ -15,8 +16,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Get users' })
   @ApiResponse({ status: 200, description: 'Return all users' })
   @Get()
-  findAll(@Query() findUsersDto: FindUsersDto){
-    return this.userService.findAll(findUsersDto);
+  findAll(){
+    return this.userService.findAll();
   }
 
   @UseGuards(AuthGuard)

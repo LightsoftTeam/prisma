@@ -7,9 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { REQUEST } from '@nestjs/core';
 import { Person } from 'src/domain/entities/person.entity';
-import { ObligatoryRoleName } from 'src/domain/entities/role.entity';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
-import { FindUsersDto } from './dto/find-users.dto';
 import { UsersRepository } from 'src/domain/repositories/users.repository';
 import { PeopleRepository } from 'src/domain/repositories/people.repository';
 
@@ -21,16 +19,15 @@ export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly logger: ApplicationLoggerService,
-    @Inject(REQUEST) private request: Request,
+    @Inject(REQUEST) private request: any,
     private readonly peopleRepository: PeopleRepository,
   ) {
     this.logger.setContext(UsersService.name);
   }
 
-  async findAll(findUsersDto: FindUsersDto) {
-    const { subsidiaryId } = findUsersDto;
+  async findAll() {
     this.logger.log('findAll users');
-    const users = await this.usersRepository.findBySubsidiaryId(subsidiaryId);
+    const users = await this.usersRepository.findBySubsidiaryId(this.request.subsidiaryId);
     return Promise.all(users.map(user => this.fillUser({ user })));
   }
 
@@ -63,6 +60,7 @@ export class UsersService {
       const person = await this.peopleRepository.create({...personDto, createdAt: new Date()});
       const user: User = {
         ...userDto,
+        subsidiaryId: this.request.subsidiaryId,
         password: hashedPassword,
         personId: person.id,
         isActive: true,

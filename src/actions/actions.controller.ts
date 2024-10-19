@@ -1,9 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { ActionsService } from './actions.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Actions')
-@Controller('actions')
+@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/actions')
+@UseInterceptors(GeneralInterceptor)
 export class ActionsController {
   constructor(private readonly actionsService: ActionsService) {}
 
