@@ -6,7 +6,7 @@ import { AuthGuard, LoggedUser } from './guards/auth.guard';
 import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 
 @ApiTags('Auth')
-@Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/auth')
+@Controller('auth')
 @UseInterceptors(GeneralInterceptor)
 export class AuthController {
   constructor(
