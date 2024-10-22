@@ -10,6 +10,7 @@ import { Person } from 'src/domain/entities/person.entity';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { UsersRepository } from 'src/domain/repositories/users.repository';
 import { PeopleRepository } from 'src/domain/repositories/people.repository';
+import { RolesRepository } from 'src/domain/repositories';
 
 const PASSWORD_SALT_ROUNDS = 10;
 
@@ -21,6 +22,7 @@ export class UsersService {
     private readonly logger: ApplicationLoggerService,
     @Inject(REQUEST) private request: any,
     private readonly peopleRepository: PeopleRepository,
+    private readonly rolesRepository: RolesRepository,
   ) {
     this.logger.setContext(UsersService.name);
   }
@@ -130,9 +132,12 @@ export class UsersService {
       const { personId } = user;
       person = await this.peopleRepository.findById(personId);
     }
+    console.log({roleid: user.roleId});
+    const role = await this.rolesRepository.findById(user.roleId);
     const filledUser = {
       ...user,
       person: FormatCosmosItem.cleanDocument(person) as Person,
+      role: FormatCosmosItem.cleanDocument(role),
     };
     return FormatCosmosItem.cleanDocument(filledUser, ['password']);
   }

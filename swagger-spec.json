@@ -141,7 +141,7 @@
         ]
       }
     },
-    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/auth/login": {
+    "/api/auth/login": {
       "post": {
         "operationId": "AuthController_signIn",
         "parameters": [],
@@ -168,7 +168,7 @@
         ]
       }
     },
-    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/auth/authenticate": {
+    "/api/auth/authenticate": {
       "get": {
         "operationId": "AuthController_getAuthenticatedUser",
         "parameters": [],

@@ -48,9 +48,9 @@ export class AuthService {
       this.logger.log(`enterprise ${JSON.stringify(subsidiary.enterpriseId)}`);
       const enterprise = await this.enterprisesRepository.findById(subsidiary.enterpriseId);
       return {
-        user: filledUser,
-        enterprise: FormatCosmosItem.cleanDocument(enterprise, ['roleIds']),
-        subsidiary: FormatCosmosItem.cleanDocument(subsidiary),
+        user: FormatCosmosItem.cleanDocument(filledUser, ['roleName', 'subsidiaryId', 'personId', 'isActive', 'createdAt', 'updatedAt', 'deletedAt']),
+        enterprise: FormatCosmosItem.cleanDocument(enterprise, ['roleIds', 'createdAt', 'updatedAt', 'deletedAt']),
+        subsidiary: FormatCosmosItem.cleanDocument(subsidiary, ['createdAt', 'updatedAt', 'deletedAt', 'enterpriseId']),
         token,
       };
     } catch (error) {
