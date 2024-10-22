@@ -30,7 +30,8 @@ export class ProductsService {
       stock: 0,
       createdAt: new Date(),
     };
-    return this.productsRepository.create(newProduct);
+    const product = await this.productsRepository.create(newProduct);
+    return this.toJson(product);
   }
 
   async findAll() {
@@ -52,7 +53,8 @@ export class ProductsService {
       ...product,
       ...updateProductDto,
     }
-    return this.productsRepository.update(id, updateproduct);
+    const newProduct = await this.productsRepository.update(id, updateproduct);
+    return this.toJson(newProduct);
   }
 
   async toJson(payload: Product | Product[]) {

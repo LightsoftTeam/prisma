@@ -53,5 +53,6 @@ export class Role {
     name: string;
     permissions: Permission[];
     enterpriseId: string;
+    isPermanent?: boolean;
     @CosmosDateTime() createdAt: Date;
 }
