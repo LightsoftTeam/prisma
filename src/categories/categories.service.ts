@@ -24,6 +24,7 @@ export class CategoriesService {
       createdAt: new Date(),
     }
     const newCategory = await this.categoriesRepository.create(category);
+    this.logger.log(`Category created: ${JSON.stringify(newCategory)}`);
     return this.fill(newCategory);
   }
 
@@ -98,9 +99,11 @@ export class CategoriesService {
   }
 
   async fill(category: Category) {
+    this.logger.debug(`Filling category ${category.id}`);
     const relatedCategories = [];
     let selectedCategory = category;
     while (selectedCategory.parentId) {
+      this.logger.debug(`parent founded: ${selectedCategory.parentId}`);
       console.log('parent founded: ', selectedCategory.parentId);
       const parentCategory = await this.findOne(selectedCategory.parentId);
       if (parentCategory) {
@@ -108,6 +111,11 @@ export class CategoriesService {
         selectedCategory = parentCategory;
       }
     }
-    return this.flattenCategories([category, ...relatedCategories]).find((c: Partial<Category>) => c.id === category.id);
+    const flattenCategories = this.flattenCategories([category, ...relatedCategories]).find((c: Partial<Category>) => c.id === category.id);
+    this.logger.debug(`Category filled: ${JSON.stringify(flattenCategories)}`);
+    if(!flattenCategories) {
+      return category;
+    }
+    return flattenCategories;
   }
 }
