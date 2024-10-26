@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { DomainService } from './domain.service';
 import { DomainController } from './domain.controller';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
-import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Movement, Subsidiary, Supplier, Ubigeo, Unit, Kardex, Customer, CashBox, CashBoxTurn } from './entities';
+import { User, ErrorEvent, Brand, Category, Enterprise, Person, Product, Role, Movement, Subsidiary, Supplier, Ubigeo, Unit, Kardex, Customer, CashBox, CashBoxTurn, Stock } from './entities';
 import { 
   BrandsRepository, 
   CategoriesRepository,
@@ -18,9 +18,10 @@ import {
   UnitsRepository,
   UsersRepository, 
   CustomersRepository,
-  CashBoxesRepository
+  CashBoxesRepository,
+  CashBoxTurnsRepository,
+  StockRepository
 } from './repositories';
-import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository';
 
 @Global()
 @Module({
@@ -43,6 +44,7 @@ import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository
     SuppliersRepository,
     UnitsRepository,
     UsersRepository,
+    StockRepository,
   ],
   imports: [
     AzureCosmosDbModule.forFeature([
@@ -63,6 +65,7 @@ import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository
       // { dto: Ubigeo },
       { dto: Unit },
       { dto: User },
+      { dto: Stock },
     ]),
   ],
   exports: [
@@ -84,6 +87,7 @@ import { CashBoxTurnsRepository } from './repositories/cash-box-turns.repository
     SuppliersRepository,
     UnitsRepository,
     UsersRepository,
+    StockRepository,
   ]
 })
 export class DomainModule { }

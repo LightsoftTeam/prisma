@@ -7,6 +7,7 @@ import { Repository } from './repository';
 import { ProductsRepository } from './products.repository';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { v4 as uuidv4 } from 'uuid';
+import { StockRepository } from './stock.repository';
 
 @Injectable()
 export class KardexRepository extends Repository<Kardex> {
@@ -15,6 +16,7 @@ export class KardexRepository extends Repository<Kardex> {
         @InjectModel(Kardex) container: Container,
         private readonly logger: ApplicationLoggerService,
         private readonly productsRepository: ProductsRepository,
+        private readonly stockRepository: StockRepository,
     ) {
         super(container);
         this.logger.setContext(KardexRepository.name);
@@ -33,23 +35,33 @@ export class KardexRepository extends Repository<Kardex> {
             throw new NotFoundException(`Product not found`);
         }
         const stockMovementIds = [];
-        stockMovements.forEach(stockMovement => {
+        const stockItems = [];
+        const promises = stockMovements.map(async stockMovement => {
             const { flowType, quantity, productId } = stockMovement;
             const product = products.find(product => product.id === productId);
             const quantityWithFlow = flowType === KardexFlowType.INCOME ? quantity : -quantity;
-            if (product.stock + quantityWithFlow < 0) {
-                throw new BadRequestException(ERRORS[ERROR_CODES.STOCK_IS_NOT_ENOUGH]);
+            //TODO: Update when exists color and size
+            const stockItem = await this.stockRepository.getOrCreateStock({ productId, subsidiaryId: stockMovement.subsidiaryId });
+            if (stockItem.stock + quantityWithFlow < 0) {
+                throw new BadRequestException({
+                    ...ERRORS[ERROR_CODES.STOCK_IS_NOT_ENOUGH],
+                    message: `Stock is not enough for product ${product.name}`,
+                });
             }
-            product.stock += quantityWithFlow;
+            const newStock = stockItem.stock + quantityWithFlow;
+            stockItem.stock = newStock;
+            stockItem.updatedAt = new Date();
+            stockItems.push(stockItem);
             const id = uuidv4();
             stockMovement.id = id;
             stockMovementIds.push(id);
         });
+        await Promise.all(promises);
         await super.createInBatch(stockMovements, { partitionKeyName: 'subsidiaryId' });
         this.logger.log('Stock movements created');
         try {
-            await this.productsRepository.updateInBatch(products, { partitionKeyName: 'enterpriseId' });
-            this.logger.log('Products updated');
+            await this.stockRepository.updateInBatch(stockItems, { partitionKeyName: 'productId' });
+            this.logger.log('Product stocks updated');
         } catch (error) {
             this.logger.debug(`Error updating products ${error.message}, reverting stock movements creation`);
             await super.destroyInBatch(stockMovementIds, partitionKey);

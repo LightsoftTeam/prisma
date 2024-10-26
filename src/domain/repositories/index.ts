@@ -1,4 +1,5 @@
 export * from './brands.repository';
+export * from './cash-box-turns.repository';
 export * from './cash-boxes.repository';
 export * from './categories.repository';
 export * from './customers.repository';
@@ -11,6 +12,7 @@ export * from './people.repository';
 export * from './products.repository';
 export * from './repository';
 export * from './roles.repository';
+export * from './stock.repository';
 export * from './subsidiaries.repository';
 export * from './suppliers.repository';
 export * from './units.repository';

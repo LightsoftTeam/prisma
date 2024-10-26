@@ -7,6 +7,7 @@ import { FormatCosmosItem } from 'src/common/helpers/format-cosmos-item.helper';
 import { ProductsRepository } from 'src/domain/repositories/products.repository';
 import { CategoriesRepository } from '../domain/repositories/categories.repository';
 import { REQUEST } from '@nestjs/core';
+import { StockRepository } from '../domain/repositories/stock.repository';
 
 @Injectable()
 export class ProductsService {
@@ -15,6 +16,7 @@ export class ProductsService {
     private readonly productsRepository: ProductsRepository,
     private readonly logger: ApplicationLoggerService,
     private readonly categoriesRepository: CategoriesRepository,
+    private readonly stockRepository: StockRepository,
     @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(ProductsService.name);
@@ -27,9 +29,9 @@ export class ProductsService {
       enterpriseId: this.request.enterpriseId,
       isActive: true,
       code: await this.productsRepository.getLastCode(),
-      stock: 0,
       createdAt: new Date(),
     };
+    //TODO: create stock record?
     const product = await this.productsRepository.create(newProduct);
     return this.toJson(product);
   }
@@ -60,7 +62,7 @@ export class ProductsService {
   async toJson(payload: Product | Product[]) {
     const isArray = Array.isArray(payload);
     let categoryIds = [];
-    let products = [];
+    let products: Product[] = [];
     if(isArray){
       categoryIds = payload.map(product => product.categoryId);
       products = payload;
@@ -69,14 +71,15 @@ export class ProductsService {
       products = [payload];
     }
     const categories = await this.categoriesRepository.findByIds(categoryIds);
-    const formattedProducts = products.map(product => {
-      console.log(product.categoryId);
+    const formattedProducts = await Promise.all(products.map(async product => {
+      const stockInSubsidiary = await this.stockRepository.getStockBySubsidiary(product.id, this.request.subsidiaryId);
       const category = categories.find(category => category.id === product.categoryId);
       return {
         ...FormatCosmosItem.cleanDocument(product),
         category,
+        stockInSubsidiary,
       };
-    });
+    }));
     return isArray ? formattedProducts : formattedProducts[0];
   }
 

@@ -9,7 +9,6 @@ export class Product {
     description?: string;
     salePrice: number;
     purchasePrice: number;
-    stock: number;
     unitId: string;
     isActive: boolean;
     image?: string;

@@ -11,6 +11,7 @@ export * from './payment-concept.entity';
 export * from './person.entity';
 export * from './product.entity';
 export * from './role.entity';
+export * from './stock.entity';
 export * from './subsidiary.entity';
 export * from './supplier.entity';
 export * from './ubigeo.entity';
