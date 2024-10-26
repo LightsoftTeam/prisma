@@ -378,10 +378,90 @@
     "/api/enterprises/{enterpriseId}/subsidiaries": {
       "get": {
         "operationId": "SubsidiariesController_findAll",
+        "summary": "Get all subsidiaries",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return all subsidiaries"
+          }
+        },
+        "tags": [
+          "Subsidiaries"
+        ]
+      },
+      "post": {
+        "operationId": "SubsidiariesController_create",
+        "summary": "Create a subsidiary",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubsidiaryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a subsidiary"
+          }
+        },
+        "tags": [
+          "Subsidiaries"
+        ]
+      }
+    },
+    "/api/enterprises/{enterpriseId}/subsidiaries/{id}": {
+      "patch": {
+        "operationId": "SubsidiariesController_update",
+        "summary": "Update a subsidiary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubsidiaryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update a subsidiary"
+          }
+        },
+        "tags": [
+          "Subsidiaries"
+        ]
+      },
+      "delete": {
+        "operationId": "SubsidiariesController_remove",
+        "summary": "Delete a subsidiary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete a subsidiary"
           }
         },
         "tags": [
@@ -1407,6 +1487,84 @@
           "action",
           "module"
         ]
+      },
+      "CreateSubsidiaryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Subsidiary name",
+            "example": "Subsidiary 1"
+          },
+          "address": {
+            "type": "string",
+            "description": "Subsidiary address",
+            "example": "Av. 1"
+          },
+          "ruc": {
+            "type": "string",
+            "description": "Subsidiary RUC",
+            "example": "12345678901"
+          },
+          "image": {
+            "type": "string",
+            "description": "Subsidiary image",
+            "example": "https://www.example.com/image.jpg"
+          },
+          "email": {
+            "type": "string",
+            "description": "Subsidiary email",
+            "example": "subsidiary1@test.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Subsidiary phone",
+            "example": "123456789"
+          }
+        },
+        "required": [
+          "name",
+          "address",
+          "ruc",
+          "image",
+          "email",
+          "phone"
+        ]
+      },
+      "UpdateSubsidiaryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Subsidiary name",
+            "example": "Subsidiary 1"
+          },
+          "address": {
+            "type": "string",
+            "description": "Subsidiary address",
+            "example": "Av. 1"
+          },
+          "ruc": {
+            "type": "string",
+            "description": "Subsidiary RUC",
+            "example": "12345678901"
+          },
+          "image": {
+            "type": "string",
+            "description": "Subsidiary image",
+            "example": "https://www.example.com/image.jpg"
+          },
+          "email": {
+            "type": "string",
+            "description": "Subsidiary email",
+            "example": "subsidiary1@test.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Subsidiary phone",
+            "example": "123456789"
+          }
+        }
       },
       "CreateCategoryDto": {
         "type": "object",
