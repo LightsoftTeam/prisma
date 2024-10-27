@@ -47,6 +47,9 @@ export class RolesService {
         if(!role) {
             throw new NotFoundException('Role not found');
         }
+        if(role.isPermanent){
+            throw new BadRequestException(ERRORS[ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE]);
+        }
         const { permissions, ...dto } = updateRoleDto;
         let newPermissions: Permission[] = role.permissions;
         if(permissions){
@@ -104,6 +107,13 @@ export class RolesService {
         const usersCount = await this.usersRepository.findCountUsersByRoleId(id);
         if(usersCount > 0){
             throw new BadRequestException(ERRORS[ERROR_CODES.A_USER_HAS_THE_ROLE]);
+        }
+        const role = await this.rolesRepository.findById(id);
+        if(!role) {
+            throw new NotFoundException('Role not found');
+        }
+        if(role.isPermanent){
+            throw new BadRequestException(ERRORS[ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE]);
         }
         this.rolesRepository.destroy(id);
         return null;

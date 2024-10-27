@@ -829,6 +829,7 @@
     "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/suppliers": {
       "post": {
         "operationId": "SuppliersController_create",
+        "summary": "Create a supplier",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -842,7 +843,7 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "The supplier has been successfully created."
           }
         },
         "tags": [
@@ -851,10 +852,11 @@
       },
       "get": {
         "operationId": "SuppliersController_findAll",
+        "summary": "Get all suppliers",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return all suppliers."
           }
         },
         "tags": [
@@ -863,8 +865,41 @@
       }
     },
     "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/suppliers/{id}": {
+      "patch": {
+        "operationId": "SuppliersController_update",
+        "summary": "Update a supplier",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSupplierDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The supplier has been successfully updated."
+          }
+        },
+        "tags": [
+          "Suppliers"
+        ]
+      },
       "delete": {
         "operationId": "SuppliersController_remove",
+        "summary": "Remove a supplier",
         "parameters": [
           {
             "name": "id",
@@ -876,8 +911,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "204": {
+            "description": "The supplier has been successfully removed."
           }
         },
         "tags": [
@@ -968,6 +1003,7 @@
     "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/customers": {
       "post": {
         "operationId": "CustomersController_create",
+        "summary": "Create a customer",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -990,6 +1026,7 @@
       },
       "get": {
         "operationId": "CustomersController_findAll",
+        "summary": "Get all customers",
         "parameters": [],
         "responses": {
           "200": {
@@ -1002,8 +1039,41 @@
       }
     },
     "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/customers/{id}": {
+      "patch": {
+        "operationId": "CustomersController_update",
+        "summary": "Update a customer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The customer has been updated."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      },
       "get": {
         "operationId": "CustomersController_findOne",
+        "summary": "Get a customer",
         "parameters": [
           {
             "name": "id",
@@ -1551,7 +1621,8 @@
               "update",
               "delete",
               "assign_permission",
-              "unassign_permission"
+              "unassign_permission",
+              "change_status_cashbox"
             ]
           },
           "module": {
@@ -1870,6 +1941,79 @@
           "person"
         ]
       },
+      "UpdatePersonDto": {
+        "type": "object",
+        "properties": {
+          "givenNames": {
+            "type": "string",
+            "description": "The given names of the person",
+            "example": "Jhon"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The last name of the person",
+            "example": "Doe"
+          },
+          "legalName": {
+            "type": "string",
+            "description": "The legal name of the person",
+            "example": "Jhon Doe S.A.C.",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "The address of the person",
+            "example": "Av. Lima 123"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the person",
+            "example": "jhon@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone of the person",
+            "example": "987654321"
+          },
+          "image": {
+            "type": "string",
+            "description": "The image of the person",
+            "example": "https://example.com/image.jpg",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the person",
+            "example": "natural"
+          },
+          "documentType": {
+            "type": "string",
+            "description": "The document type of the person",
+            "example": "dni"
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "The document number of the person",
+            "example": "12345678"
+          }
+        }
+      },
+      "UpdateSupplierDto": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdatePersonDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "person"
+        ]
+      },
       "CreateSaleDto": {
         "type": "object",
         "properties": {
@@ -1913,6 +2057,22 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "person"
+        ]
+      },
+      "UpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "description": "The person data of the user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdatePersonDto"
               }
             ]
           }

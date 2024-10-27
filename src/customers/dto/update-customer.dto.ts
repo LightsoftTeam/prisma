@@ -1,4 +1,16 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCustomerDto } from './create-customer.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { UpdatePersonDto } from 'src/people/dto/update-person.dto';
+import { IsObject, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class UpdateCustomerDto extends PartialType(CreateCustomerDto) {}
+export class UpdateCustomerDto {
+    @ApiProperty({
+        description: 'The person data of the user',
+    })
+    @IsObject()
+    @Type(() => UpdatePersonDto)
+    @ValidateNested({
+        each: true,
+    })
+    person: UpdatePersonDto;
+}

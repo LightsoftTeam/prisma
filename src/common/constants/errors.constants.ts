@@ -10,6 +10,7 @@ export enum ERROR_CODES {
     PERMISSION_ALREADY_EXISTS = 'PERMISSION_ALREADY_EXISTS',
     A_USER_HAS_THE_ROLE = 'A_USER_HAS_THE_ROLE',
     PAYMENT_ITEMS_REQUIRED = 'PAYMENT_ITEMS_REQUIRED',
+    CANT_UPDATE_PERMANENT_ROLE = 'CANT_UPDATE_PERMANENT_ROLE',
 }
 
 export const ERRORS = {
@@ -56,5 +57,9 @@ export const ERRORS = {
     [ERROR_CODES.PAYMENT_ITEMS_REQUIRED]: {
         code: ERROR_CODES.PAYMENT_ITEMS_REQUIRED,
         message: 'Payment items are required where a cash flow is generated',
+    },
+    [ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE]: {
+        code: ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE,
+        message: 'You can not update a permanent role',
     },
 }

@@ -2,10 +2,11 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersRepository } from 'src/domain/repositories/customers.repository';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { Customer } from 'src/domain/entities';
+import { Customer, Person } from 'src/domain/entities';
 import { UsersService } from 'src/users/users.service';
 import { PeopleRepository } from 'src/domain/repositories';
 import { REQUEST } from '@nestjs/core';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @Injectable()
 export class CustomersService {
@@ -32,6 +33,28 @@ export class CustomersService {
       };
       const newCustomer = await this.customersRepository.create(customer);
       return this.fill(newCustomer);
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
+    }
+  }
+
+  async update(id: string, updateCustomerDto: UpdateCustomerDto) {
+    try {
+      const { person: personDto } = updateCustomerDto;
+      //TODO: check if person is already created
+      const customer = await this.customersRepository.findById(id);
+      if (!customer) {
+        throw new NotFoundException('Customer not found');
+      }
+      const person = await this.peopleRepository.findById(customer.personId);
+      const updatedPerson: Person = {
+        ...person,
+        ...personDto,
+        updatedAt: new Date(),
+      };
+      await this.peopleRepository.update(person.id, updatedPerson);
+      return this.fill(customer);
     } catch (error) {
       this.logger.error(error.message);
       throw error;

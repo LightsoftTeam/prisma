@@ -25,6 +25,7 @@ export enum Action{
     DELETE = 'delete',
     ASSIGN_PERMISSION = 'assign_permission',
     UNASSIGN_PERMISSION = 'unassign_permission',
+    CHANGE_STATUS_CASHBOX = "change_status_cashbox"
 }
 
 export enum Module{
