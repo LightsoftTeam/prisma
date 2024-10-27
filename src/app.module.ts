@@ -27,6 +27,8 @@ import { ActionsModule } from './actions/actions.module';
 import { ModulesModule } from './modules/modules.module';
 import { GeneralInterceptor } from './common/interceptors/general.interceptor';
 import { ApplicationLoggerService } from './common/services/application-logger.service';
+import { PurchasesModule } from './purchases/purchases.module';
+import { MovementsModule } from './movements/movements.module';
 
 @Module({
   imports: [
@@ -62,6 +64,8 @@ import { ApplicationLoggerService } from './common/services/application-logger.s
     CashBoxesModule,
     ActionsModule,
     ModulesModule,
+    PurchasesModule,
+    MovementsModule,
   ],
   controllers: [AppController],
   providers: [

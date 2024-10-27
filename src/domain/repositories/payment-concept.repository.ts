@@ -4,6 +4,8 @@ import { CashFlowType, PaymentConcept } from '../entities';
 
 const CASH_BOX_OPENING_CONCEPT_ID = '023e934f-12bd-4ba4-8c03-bea5b0854a09';
 const CASH_BOX_CLOSING_CONCEPT_ID = '64140673-c9ec-46e4-afe8-65991c711fa0';
+const PURCHASE_CONCEPT_ID = '65111ddf-d6b5-4c0e-ac18-f84cd5c3fc94';
+const SALE_CONCEPT_ID = 'ceb6dfc3-50aa-41e2-a402-3c461c8bcb95';
 
 const PAYMENT_CONCEPTS: PaymentConcept[] = [
     {
@@ -242,5 +244,13 @@ export class PaymentConceptsRepository {
 
     getCashBoxClosingConceptId(){
         return CASH_BOX_CLOSING_CONCEPT_ID;
+    }
+
+    getPurchaseConceptId(){
+        return PAYMENT_CONCEPTS.find(concept => concept.id === PURCHASE_CONCEPT_ID).id;
+    }
+
+    getSaleConceptId(){
+        return PAYMENT_CONCEPTS.find(concept => concept.id === SALE_CONCEPT_ID).id;
     }
 }

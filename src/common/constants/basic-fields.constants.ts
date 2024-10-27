@@ -1,0 +1,1 @@
+export const BASIC_PRODUCT_FIELDS = ['id', 'name'];

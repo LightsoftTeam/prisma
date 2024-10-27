@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { Permission, Role } from 'src/domain/entities';
+import { ObligatoryRoleName, Permission, Role } from 'src/domain/entities';
 import { RolesRepository } from 'src/domain/repositories/roles.repository';
 import { AddPermissionDto } from './dto/add-permission.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +23,7 @@ export class RolesService {
 
     async findAll() {
         const roles = await this.rolesRepository.findByEnterpriseId(this.request.enterpriseId);
-        return roles;
+        return roles.filter(r => r.name !== ObligatoryRoleName.SUPER_ADMIN);
     }
 
     async create(createRoleDto: CreateRoleDto) {

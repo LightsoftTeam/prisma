@@ -1,10 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsEnum, IsNumber, IsUUID, ValidateNested } from "class-validator";
-import { PaymentItem, PaymentMethod } from "src/domain/entities";
+import { IsArray, IsBoolean, IsNumber, IsUUID, ValidateNested } from "class-validator";
 import { PaymentItemDto } from "src/movements/dto/payment-item.dto";
 
-export class ItemDto{
+export class PurchaseItemDto{
     @ApiProperty({
         description: 'Product ID',
         example: 'f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b'
@@ -22,19 +21,19 @@ export class ItemDto{
         example: 100
     })
     @IsNumber()
-    salePrice: number;
+    purchasePrice: number;
 }
 
-export class CreateSaleDto {
+export class CreatePurchaseDto {
     @ApiProperty({
         description: 'Items',
     })
     @IsArray()
-    @Type(() => ItemDto)
+    @Type(() => PurchaseItemDto)
     @ValidateNested({
         each: true,
     })
-    items: ItemDto[];
+    items: PurchaseItemDto[];
 
     @ApiProperty({
         description: 'Total',
@@ -51,12 +50,19 @@ export class CreateSaleDto {
     @ValidateNested({
         each: true,
     })
-    paymentItems: PaymentItem[];
+    paymentItems: PaymentItemDto[];
 
     @ApiProperty({
-        description: 'Customer ID',
+        description: 'Supplier ID',
         example: 'f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b'
     })
     @IsUUID()
-    customerId: string;
+    supplierId: string;
+
+    @ApiProperty({
+        description: 'Generate cash flow',
+        example: true
+    })
+    @IsBoolean()
+    generateCashFlow: boolean;
 }

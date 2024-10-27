@@ -1,24 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsNumber, IsUUID, ValidateNested } from "class-validator";
 import { CashFlowType } from "src/domain/entities";
-
-export class ItemDto{
-    @ApiProperty({
-        description: 'Amount of the item',
-        example: 200
-    })
-    @IsNumber()
-    amount: number;
-
-    @ApiProperty({
-        description: 'Price',
-        example: 100
-    })
-    @IsString()
-    @IsOptional()
-    remarks?: string;    
-}
+import { PaymentItemDto } from "src/movements/dto/payment-item.dto";
 
 export class CreateCashBoxMovementDto{
     @ApiProperty({
@@ -46,11 +30,11 @@ export class CreateCashBoxMovementDto{
         description: 'Items',
     })
     @IsArray()
-    @Type(() => ItemDto)
+    @Type(() => PaymentItemDto)
     @ValidateNested({
         each: true,
     })
-    items: ItemDto[];
+    items: PaymentItemDto[];
 
     @ApiProperty({
         description: 'Total',

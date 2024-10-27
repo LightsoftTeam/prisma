@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable, InternalServerErrorException, 
 import { CreateCashBoxDto } from './dto/create-cash-box.dto';
 import { UpdateCashBoxDto } from './dto/update-cash-box.dto';
 import { CashBoxesRepository, MovementsRepository, PaymentConceptsRepository, UsersRepository } from 'src/domain/repositories';
-import { CashBox, CashBoxMovementData, CashBoxMovementItem, CashBoxStatus, CashBoxTurn, CashFlowType, Movement, MovementType } from 'src/domain/entities';
+import { CashBox, CashBoxMovementData, CashBoxStatus, CashBoxTurn, CashFlowType, Movement, MovementType, PaymentItem } from 'src/domain/entities';
 import { UsersService } from '../users/users.service';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { ChangeCashBoxStatusDto } from './dto/change-cash-box-status.dto';
@@ -84,7 +84,7 @@ export class CashBoxesService {
         updatedAt: new Date(),
       };
       const now = new Date();
-      const movementItems: CashBoxMovementItem[] = itemsDto.map(item => ({
+      const movementItems: PaymentItem[] = itemsDto.map(item => ({
         id: uuidv4(),
         ...item,
         createdAt: now,
@@ -160,7 +160,7 @@ export class CashBoxesService {
     }
   }
 
-  private validateItemsTotal({ items, total }: { items: CashBoxMovementItem[], total: number }) {
+  private validateItemsTotal({ items, total }: { items: PaymentItem[], total: number }) {
     const itemsTotal = items.reduce((acc, item) => acc + item.amount, 0);
     if (itemsTotal !== total) {
       throw new BadRequestException(ERRORS[ERROR_CODES.TOTAL_INVALID]);

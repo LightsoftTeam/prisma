@@ -1224,6 +1224,102 @@
           "Modules"
         ]
       }
+    },
+    "/api/purchases": {
+      "post": {
+        "operationId": "PurchasesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurchaseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "PurchasesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/purchases/{id}": {
+      "get": {
+        "operationId": "PurchasesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "PurchasesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurchaseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "PurchasesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {
@@ -1466,6 +1562,7 @@
               "dashboard",
               "users",
               "products",
+              "categories",
               "brands",
               "units",
               "warehouses",
@@ -1906,6 +2003,81 @@
           "total",
           "remarks"
         ]
+      },
+      "CreatePurchaseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total",
+            "example": 100
+          },
+          "paymentItems": {
+            "description": "Payment items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supplierId": {
+            "type": "string",
+            "description": "Supplier ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b"
+          },
+          "generateCashFlow": {
+            "type": "boolean",
+            "description": "Generate cash flow",
+            "example": true
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "paymentItems",
+          "supplierId",
+          "generateCashFlow"
+        ]
+      },
+      "UpdatePurchaseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total",
+            "example": 100
+          },
+          "paymentItems": {
+            "description": "Payment items",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supplierId": {
+            "type": "string",
+            "description": "Supplier ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b"
+          },
+          "generateCashFlow": {
+            "type": "boolean",
+            "description": "Generate cash flow",
+            "example": true
+          }
+        }
       }
     }
   }

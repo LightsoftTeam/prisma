@@ -20,7 +20,8 @@ import {
   CustomersRepository,
   CashBoxesRepository,
   CashBoxTurnsRepository,
-  StockRepository
+  StockRepository,
+  PaymentConceptsRepository
 } from './repositories';
 
 @Global()
@@ -45,6 +46,7 @@ import {
     UnitsRepository,
     UsersRepository,
     StockRepository,
+    PaymentConceptsRepository,
   ],
   imports: [
     AzureCosmosDbModule.forFeature([
@@ -88,6 +90,7 @@ import {
     UnitsRepository,
     UsersRepository,
     StockRepository,
+    PaymentConceptsRepository,
   ]
 })
 export class DomainModule { }

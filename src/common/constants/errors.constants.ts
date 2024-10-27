@@ -9,6 +9,7 @@ export enum ERROR_CODES {
     GIVEN_NAMES_AND_LAST_NAME_REQUIRED = 'GIVEN_NAMES_AND_LAST_NAME_REQUIRED',
     PERMISSION_ALREADY_EXISTS = 'PERMISSION_ALREADY_EXISTS',
     A_USER_HAS_THE_ROLE = 'A_USER_HAS_THE_ROLE',
+    PAYMENT_ITEMS_REQUIRED = 'PAYMENT_ITEMS_REQUIRED',
 }
 
 export const ERRORS = {
@@ -51,5 +52,9 @@ export const ERRORS = {
     [ERROR_CODES.A_USER_HAS_THE_ROLE]: {
         code: ERROR_CODES.A_USER_HAS_THE_ROLE,
         message: 'A user has the role, you can not delete it',
+    },
+    [ERROR_CODES.PAYMENT_ITEMS_REQUIRED]: {
+        code: ERROR_CODES.PAYMENT_ITEMS_REQUIRED,
+        message: 'Payment items are required where a cash flow is generated',
     },
 }

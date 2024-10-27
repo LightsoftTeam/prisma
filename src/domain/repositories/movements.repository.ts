@@ -42,6 +42,18 @@ export class MovementsRepository extends Repository<Movement> {
         return newMovement;
     }
 
+    async findByMovementType({movementType, subsidiaryId}: {movementType: MovementType, subsidiaryId: string}){
+        const querySpec = {
+            query: `SELECT * FROM c WHERE c.type = @type AND c.subsidiaryId = @subsidiaryId`,
+            parameters: [
+                { name: '@type', value: movementType },
+                { name: '@subsidiaryId', value: subsidiaryId },
+            ],
+        }
+        const { resources } = await this.container.items.query<Movement>(querySpec).fetchAll();
+        return resources;
+    }
+
     private itAffectsStock(movement: Movement) {
         return MOVEMENT_TYPES_THAT_AFFECT_STOCK.includes(movement.type);
     }

@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CashBoxStatus } from "src/domain/entities";
-import { ItemDto } from "./create-cash-box-movement.dto";
 import { Type } from "class-transformer";
+import { PaymentItemDto } from "src/movements/dto/payment-item.dto";
 
 export class ChangeCashBoxStatusDto {
     @ApiProperty({
@@ -17,11 +17,11 @@ export class ChangeCashBoxStatusDto {
         description: 'Items',
     })
     @IsArray()
-    @Type(() => ItemDto)
+    @Type(() => PaymentItemDto)
     @ValidateNested({
         each: true,
     })
-    items: ItemDto[];
+    items: PaymentItemDto[];
 
     @ApiProperty({
         description: 'Total',

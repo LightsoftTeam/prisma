@@ -17,26 +17,27 @@ export enum PaymentMethod {
 }
 export interface SaleData {
     customerId: string;
-    paymentItems: PaymentItem[];
     total: number;
     items: SaleItem[];
 }
 
 export interface PaymentItem {
+    id: string;
     paymentMethod: PaymentMethod;
+    remarks?: string;
     amount: number;
 }
 
 export interface PurchaseData {
     supplierId: string;
-    paymentMethod: PaymentMethod;
     total: number;
     items: PurchaseItem[];
 }
 
 export interface CashBoxMovementData {
-    items: CashBoxMovementItem[];
+    // items: CashBoxMovementItem[];
     paymentConceptId: string;
+    items: PaymentItem[];
     type: CashFlowType;
     total: number;
 }
@@ -56,14 +57,14 @@ export interface PurchaseItem {
     product?: Partial<Product>;
 }
 
-export interface CashBoxMovementItem {
-    id: string;
-    amount: number;
-    remarks?: string;
-    createdAt: Date;
-    updatedAt?: Date;
-    deletedAt?: Date;
-}
+// export interface CashBoxMovementItem {
+//     id: string;
+//     amount: number;
+//     remarks?: string;
+//     createdAt: Date;
+//     updatedAt?: Date;
+//     deletedAt?: Date;
+// }
 
 @CosmosPartitionKey('subsidiaryId')
 export class Movement {

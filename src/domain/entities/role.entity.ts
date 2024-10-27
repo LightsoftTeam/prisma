@@ -23,7 +23,6 @@ export enum Action{
     READ = 'read',
     UPDATE = 'update',
     DELETE = 'delete',
-    //asignar permiso
     ASSIGN_PERMISSION = 'assign_permission',
     UNASSIGN_PERMISSION = 'unassign_permission',
 }
@@ -32,6 +31,7 @@ export enum Module{
     DASHBOARD = 'dashboard',
     USERS = 'users',
     PRODUCTS = 'products',
+    CATEGORIES = 'categories',
     BRANDS = 'brands',
     UNITS = 'units',
     WAREHOUSES = 'warehouses',

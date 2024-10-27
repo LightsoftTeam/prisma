@@ -1,16 +1,15 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { Movement, MovementType, SaleData } from 'src/domain/entities';
+import { CashBoxMovementData, CashFlowType, Movement, MovementType, PaymentItem, SaleData } from 'src/domain/entities';
 import { v4 as uuidv4 } from 'uuid';
-import { MovementsRepository, ProductsRepository } from 'src/domain/repositories';
+import { MovementsRepository, PaymentConceptsRepository, ProductsRepository } from 'src/domain/repositories';
 import { UsersService } from 'src/users/users.service';
 import { ErrorEventsRepository } from 'src/domain/repositories/error-events.repository';
 import { ErrorEvent } from 'src/domain/errors/error-event.error';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { REQUEST } from '@nestjs/core';
-
-const BASIC_PRODUCT_FIELDS = ['id', 'name'];
+import { BASIC_PRODUCT_FIELDS } from 'src/common/constants/basic-fields.constants';
 
 @Injectable()
 export class SalesService {
@@ -21,6 +20,7 @@ export class SalesService {
     private readonly errorEventsRepository: ErrorEventsRepository,
     private readonly usersService: UsersService,
     private readonly movementsRepository: MovementsRepository,
+    private readonly paymentConceptsRepository: PaymentConceptsRepository,
     @Inject(REQUEST) private readonly request: any,
   ) {
     this.logger.setContext(SalesService.name);
@@ -33,7 +33,6 @@ export class SalesService {
       const loggedUser = this.usersService.getLoggedUser();
       const data: SaleData = {
         customerId,
-        paymentItems, 
         items: items.map(item => ({
           ...item,
           id: uuidv4()
@@ -48,9 +47,34 @@ export class SalesService {
         data,
         createdAt: new Date(),
       };
-      this.validate(movement);
+      this.validateTotal({movement, paymentItems});
       this.logger.debug(`Creating movement - ${movement.type}`);
       const newMovement = await this.movementsRepository.create(movement);
+      try {
+        const cashBoxMovementData: CashBoxMovementData = {
+          type: CashFlowType.INCOME,
+          items: paymentItems.map(item => ({
+            ...item,
+            id: uuidv4(),
+            createdAt: new Date(),
+          })),
+          paymentConceptId: this.paymentConceptsRepository.getPurchaseConceptId(),
+          total,
+        }
+        const cashBoxMovementPayload: Movement = {
+          type: MovementType.CASH_BOX,
+          subsidiaryId: this.request.subsidiaryId,
+          createdAt: new Date(),
+          createdById: loggedUser.id,
+          data: cashBoxMovementData,
+          parentId: newMovement.id,
+        }
+        this.logger.debug('Creating cash box movement');
+        await this.movementsRepository.create(cashBoxMovementPayload);
+      } catch (error) {
+        this.movementsRepository.delete(newMovement.id);
+        throw error;
+      }
       return newMovement;
     } catch (error) {
       this.logger.critical(`Error creating sale ${error.message}`);
@@ -67,9 +91,9 @@ export class SalesService {
     }
   }
 
-  private validate(movement: Movement) {
+  private validateTotal({movement, paymentItems}: {movement: Movement, paymentItems: PaymentItem[]}) {
     const { data } = movement;
-    const { total, items, paymentItems } = data as SaleData;
+    const { total, items } = data as SaleData;
     const itemsTotal = items.reduce((acc, item) => acc + item.quantity * item.salePrice, 0);
     const paymentItemsTotal = paymentItems.reduce((acc, item) => acc + item.amount, 0);
     if (total !== itemsTotal || total !== paymentItemsTotal) {
