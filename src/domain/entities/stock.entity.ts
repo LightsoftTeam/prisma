@@ -1,6 +1,6 @@
 import { CosmosDateTime, CosmosPartitionKey } from '@nestjs/azure-database';
 
-@CosmosPartitionKey('productId')
+@CosmosPartitionKey('subsidiaryId')
 export class Stock {
     id?: string;
     productId: string;

@@ -66,7 +66,7 @@ export class MovementsRepository extends Repository<Movement> {
                 quantity: item.quantity,
                 subsidiaryId: movement.subsidiaryId,
                 movementId: movement.id,
-                flowType: KardexFlowType.OUTCOME,
+                flowType: movement.type === MovementType.SALE ? KardexFlowType.OUTCOME : KardexFlowType.INCOME,
                 createdAt: new Date(),
             };
         });

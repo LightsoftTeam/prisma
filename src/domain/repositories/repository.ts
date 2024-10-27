@@ -185,6 +185,7 @@ export class Repository<T extends COSMOS_ENTITY> {
         const getOperations = (entities: T[]) => {
             return entities.map(entity => {
                 const resourceBody = JSON.parse(JSON.stringify(entity));
+                console.log({resourceBody});
                 const operationInput: OperationInput = {
                     id: entity['id'],
                     operationType: BulkOperationType.Replace,
@@ -215,6 +216,9 @@ export class Repository<T extends COSMOS_ENTITY> {
             const batchResponse = await this.container.items.batch(operations, partitionKey);
             const { code, result } = batchResponse;
             console.log('update in batch', { code, result: result.map(r => r.statusCode) });
+            if(code === 200){
+                console.log('code is 200');
+            }
             if (code === 200 && result.every(result => COSMOS_SUCCES_OPERATION_CODES.includes(result.statusCode))) {
                 return { code, result };
             }

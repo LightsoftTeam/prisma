@@ -60,10 +60,11 @@ export class KardexRepository extends Repository<Kardex> {
         await super.createInBatch(stockMovements, { partitionKeyName: 'subsidiaryId' });
         this.logger.log('Stock movements created');
         try {
-            await this.stockRepository.updateInBatch(stockItems, { partitionKeyName: 'productId' });
+            console.log({stockItems});
+            await this.stockRepository.updateInBatch(stockItems, { partitionKeyName: 'subsidiaryId' });
             this.logger.log('Product stocks updated');
         } catch (error) {
-            this.logger.debug(`Error updating products ${error.message}, reverting stock movements creation`);
+            this.logger.debug(`Error updating sotcks ${error.message}, reverting stock movements creation`);
             await super.destroyInBatch(stockMovementIds, partitionKey);
             throw error;
         }

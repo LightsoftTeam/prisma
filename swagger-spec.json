@@ -991,7 +991,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "The record has been successfully deleted."
           }
         },
@@ -1295,9 +1295,10 @@
         ]
       }
     },
-    "/api/purchases": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/purchases": {
       "post": {
         "operationId": "PurchasesController_create",
+        "summary": "Create a purchase",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1311,23 +1312,31 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "The purchase has been successfully created."
           }
-        }
+        },
+        "tags": [
+          "Purchases"
+        ]
       },
       "get": {
         "operationId": "PurchasesController_findAll",
+        "summary": "Get all purchases",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return all purchases."
           }
-        }
+        },
+        "tags": [
+          "Purchases"
+        ]
       }
     },
-    "/api/purchases/{id}": {
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/purchases/{id}": {
       "get": {
         "operationId": "PurchasesController_findOne",
+        "summary": "Get a purchase by id",
         "parameters": [
           {
             "name": "id",
@@ -1340,12 +1349,16 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return a purchase by id."
           }
-        }
+        },
+        "tags": [
+          "Purchases"
+        ]
       },
       "patch": {
         "operationId": "PurchasesController_update",
+        "summary": "Update a purchase by id",
         "parameters": [
           {
             "name": "id",
@@ -1368,12 +1381,16 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return the updated purchase."
           }
-        }
+        },
+        "tags": [
+          "Purchases"
+        ]
       },
       "delete": {
         "operationId": "PurchasesController_remove",
+        "summary": "Delete a purchase by id",
         "parameters": [
           {
             "name": "id",
@@ -1385,10 +1402,13 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "204": {
+            "description": "Return the deleted purchase."
           }
-        }
+        },
+        "tags": [
+          "Purchases"
+        ]
       }
     }
   },

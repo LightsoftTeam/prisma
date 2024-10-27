@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UseInterceptors, HttpCode, HttpStatus } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 // import { UpdateSaleDto } from './dto/update-sale.dto';
@@ -40,7 +40,8 @@ export class SalesController {
   // }
 
   @UseGuards(AuthGuard)
-  @ApiResponse({ status: 200, description: 'The record has been successfully deleted.'})
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'The record has been successfully deleted.'})
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.salesService.remove(id);
