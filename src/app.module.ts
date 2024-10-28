@@ -29,6 +29,7 @@ import { GeneralInterceptor } from './common/interceptors/general.interceptor';
 import { ApplicationLoggerService } from './common/services/application-logger.service';
 import { PurchasesModule } from './purchases/purchases.module';
 import { MovementsModule } from './movements/movements.module';
+import { PruebaModule } from './prueba/prueba.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { MovementsModule } from './movements/movements.module';
     ModulesModule,
     PurchasesModule,
     MovementsModule,
+    PruebaModule,
   ],
   controllers: [AppController],
   providers: [
