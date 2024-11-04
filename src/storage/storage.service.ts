@@ -16,6 +16,7 @@ export class StorageService {
     constructor(
         private readonly logger: ApplicationLoggerService,
     ) {
+        logger.setContext(StorageService.name);
         const account = process.env.AZURE_STORAGE_ACCOUNT;
         this.credential = new DefaultAzureCredential();
         // this.credential = new StorageSharedKeyCredential(account, accountKey);
