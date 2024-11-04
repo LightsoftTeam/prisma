@@ -17,7 +17,7 @@ export class StorageController {
     ) { }
 
     @ApiOperation({ summary: 'Upload a file' })
-    @ApiResponse({ status: HttpStatus.OK, description: 'The file has been successfully uploaded.'})
+    @ApiResponse({ status: HttpStatus.OK, description: 'The file has been successfully uploaded.' })
     @ApiBody({
         description: 'Request Body',
         schema: {
@@ -42,20 +42,16 @@ export class StorageController {
         @Body('fileName') fileName: string,
     ) {
         this.logger.log('Uploading file...');
-        try {
-            const prefix = process.env.AZURE_STORAGE_FOLDER ? `${process.env.AZURE_STORAGE_FOLDER}/` : '';
-            const ext = file.originalname.split('.').at(-1);
-            const originalname = `${prefix}${new Date().getTime()}_${fileName ? fileName + ext : file.originalname}`;
-            const url = await this.storageService.uploadBuffer({
-                buffer: file.buffer,
-                blobName: originalname,
-                contentType: file.mimetype
-            });
-            return {
-                url
-            };
-        } catch (error) {
-            this.logger.error(error.message);
-        }
+        const prefix = process.env.AZURE_STORAGE_FOLDER ? `${process.env.AZURE_STORAGE_FOLDER}/` : '';
+        const ext = file.originalname.split('.').at(-1);
+        const originalname = `${prefix}${new Date().getTime()}_${fileName ? fileName + ext : file.originalname}`;
+        const url = await this.storageService.uploadBuffer({
+            buffer: file.buffer,
+            blobName: originalname,
+            contentType: file.mimetype
+        });
+        return {
+            url
+        };
     }
 }
