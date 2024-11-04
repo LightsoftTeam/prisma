@@ -11,6 +11,7 @@ export class StorageService {
     credential: any;
     containerName: string = process.env.AZURE_STORAGE_CONTAINER;
     container: ContainerClient;
+    sharedKeyCredential: StorageSharedKeyCredential;
 
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -25,6 +26,7 @@ export class StorageService {
         // console.log(this.client);
         this.logger.log('@@@@StorageService initialized');
         this.container = this.client.getContainerClient(this.containerName);
+        this.sharedKeyCredential = new StorageSharedKeyCredential(account, process.env.AZURE_STORAGE_KEY);
     }
 
     async uploadBuffer({
@@ -38,9 +40,6 @@ export class StorageService {
     }) {
         try {
             this.logger.log('Uploading file...');
-            const token = await this.testManagedIdentity();
-            await this.listBlobsWithToken(token);
-            await this.listBlobs();
             const startDate = new Date();
             const blockBlobClient = this.container.getBlockBlobClient(blobName);
             const options = { blobHTTPHeaders: { blobContentType: contentType } };
@@ -50,6 +49,7 @@ export class StorageService {
             const sasQueryParameters = this.getSasQueryParameters(blobName);
             const blobUrlWithSas = `${blockBlobClient.url}?${sasQueryParameters}`;
             return { blobUrl: blobUrlWithSas, contentType };
+            return 1;
         } catch (error) {
             this.logger.error("=====error in uploadbuffer=======")
             throw error;
@@ -111,7 +111,7 @@ export class StorageService {
                 startsOn,
                 expiresOn,
                 protocol: SASProtocol.HttpsAndHttp
-            }, this.credential).toString();
+            }, this.sharedKeyCredential).toString();
 
             return sasQueryParameters;
         } catch (error) {
