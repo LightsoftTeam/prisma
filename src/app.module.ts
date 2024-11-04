@@ -37,8 +37,8 @@ import { DefaultAzureCredential } from '@azure/identity';
       useFactory: async (configService: ConfigService) => ({
         dbName: configService.get('DB_NAME'),
         endpoint: configService.get('DB_ENDPOINT'),
-        // key: configService.get('DB_KEY'),
-        aadCredentials: new DefaultAzureCredential(),
+        key: configService.get('DB_KEY'),
+        // aadCredentials: new DefaultAzureCredential(),
         retryAttempts: 1,
       }),
       inject: [ConfigService],

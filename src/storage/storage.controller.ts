@@ -1,8 +1,10 @@
-import { AzureStorageFileInterceptor, AzureStorageService, UploadedFileMetadata } from '@nestjs/azure-storage';
 import { Body, Controller, HttpCode, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
+import { StorageService } from './storage.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 
 @ApiTags('Storage')
 @Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/storage')
@@ -10,7 +12,7 @@ import { ApplicationLoggerService } from 'src/common/services/application-logger
 export class StorageController {
 
     constructor(
-        private readonly azureStorage: AzureStorageService,
+        private readonly storageService: StorageService,
         private readonly logger: ApplicationLoggerService
     ) { }
 
@@ -34,12 +36,9 @@ export class StorageController {
     })
     @HttpCode(HttpStatus.OK)
     @Post('upload')
-    @UseInterceptors(
-        AzureStorageFileInterceptor('file'),
-    )
+    @UseInterceptors(FileInterceptor('file'))
     async upload(
-        @UploadedFile()
-        file: UploadedFileMetadata,
+        @UploadedFile() file: Express.Multer.File,
         @Body('fileName') fileName: string,
     ) {
         this.logger.log('Uploading file...');
@@ -47,11 +46,11 @@ export class StorageController {
             const prefix = process.env.AZURE_STORAGE_FOLDER ? `${process.env.AZURE_STORAGE_FOLDER}/` : '';
             const ext = file.originalname.split('.').at(-1);
             const originalname = `${prefix}${new Date().getTime()}_${fileName ? fileName + ext : file.originalname}`;
-            file = {
-                ...file,
-                originalname
-            };
-            const url = await this.azureStorage.upload(file);
+            const url = await this.storageService.uploadBuffer({
+                buffer: file.buffer,
+                blobName: originalname,
+                contentType: file.mimetype
+            });
             return {
                 url
             };
