@@ -51,7 +51,7 @@ export class StorageService {
             const blobUrlWithSas = `${blockBlobClient.url}?${sasQueryParameters}`;
             return { blobUrl: blobUrlWithSas, contentType };
         } catch (error) {
-            console.log("=====error in uploadbuffer=======")
+            this.logger.error("=====error in uploadbuffer=======")
             throw error;
         }
     }
@@ -59,6 +59,7 @@ export class StorageService {
     async listBlobsWithToken(token: string) {
         const accountName = 'lightsoft';
         const containerName = this.containerName;
+        this.logger.debug({ accountName, containerName });
         const url = `https://${accountName}.blob.core.windows.net/${containerName}?comp=list`;
     
         try {
@@ -68,9 +69,10 @@ export class StorageService {
                     'x-ms-version': '2020-04-08' // Asegúrate de usar una versión válida
                 }
             });
+            this.logger.debug('list with token success');
             console.log('Blobs:', response.data);
         } catch (error) {
-            console.error('Error al listar blobs:', error.response ? error.response.data : error.message);
+            this.logger.error(`Error al listar blobs: ${error.message}`);
         }
     }
     
@@ -89,7 +91,7 @@ export class StorageService {
         // Listar blobs en el contenedor
         try {
             for await (const blob of this.container.listBlobsFlat()) {
-                console.log(`- ${blob.name}`);
+                this.logger.debug(`- ${blob.name}`);
             }
         } catch (error) {
             this.logger.error("Error in listBlobs");
