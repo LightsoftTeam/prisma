@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -21,15 +20,13 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { SalesModule } from './sales/sales.module';
 import { DomainModule } from './domain/domain.module';
 import { CustomersModule } from './customers/customers.module';
-import { BrandsRepository } from './domain/repositories';
 import { CashBoxesModule } from './cash-boxes/cash-boxes.module';
 import { ActionsModule } from './actions/actions.module';
 import { ModulesModule } from './modules/modules.module';
-import { GeneralInterceptor } from './common/interceptors/general.interceptor';
-import { ApplicationLoggerService } from './common/services/application-logger.service';
 import { PurchasesModule } from './purchases/purchases.module';
 import { MovementsModule } from './movements/movements.module';
 import { PruebaModule } from './prueba/prueba.module';
+import { DefaultAzureCredential } from '@azure/identity';
 
 @Module({
   imports: [
@@ -40,7 +37,8 @@ import { PruebaModule } from './prueba/prueba.module';
       useFactory: async (configService: ConfigService) => ({
         dbName: configService.get('DB_NAME'),
         endpoint: configService.get('DB_ENDPOINT'),
-        key: configService.get('DB_KEY'),
+        // key: configService.get('DB_KEY'),
+        aadCredentials: new DefaultAzureCredential(),
         retryAttempts: 1,
       }),
       inject: [ConfigService],

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@azure/functions": "^1.0.3",
+    "@azure/identity": "^4.5.0",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/azure-database": "^3.0.0",
     "@nestjs/azure-func-http": "^0.10.0",
