@@ -15,12 +15,21 @@
         ]
       }
     },
-    "/api/test-update-in-batch": {
-      "post": {
-        "operationId": "AppController_testUpdateInBatch",
-        "parameters": [],
+    "/api/verify-user": {
+      "get": {
+        "operationId": "AppController_verifyUser",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },

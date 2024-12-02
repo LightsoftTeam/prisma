@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { readFile } from 'fs';
 import { AppService } from './app.service';
@@ -22,8 +22,8 @@ export class AppController {
     });
   }
 
-  @Post('test-update-in-batch')
-  testUpdateInBatch() {
-    return this.appService.testUpdateInBatch();
+  @Get('verify-user')
+  verifyUser(@Query('email') email?: string) {
+    return this.appService.verifyUser(email);
   }
 }

@@ -18,8 +18,9 @@ export class StorageService {
     ) {
         logger.setContext(StorageService.name);
         const account = process.env.AZURE_STORAGE_ACCOUNT;
-        this.credential = new DefaultAzureCredential();
-        // this.credential = new StorageSharedKeyCredential(account, accountKey);
+        const accountKey = process.env.AZURE_STORAGE_KEY;
+        // this.credential = new DefaultAzureCredential();
+        this.credential = new StorageSharedKeyCredential(account, accountKey);
         this.sharedKeyCredential = new StorageSharedKeyCredential(account, process.env.AZURE_STORAGE_KEY);
         this.client = new BlobServiceClient(
             `https://${account}.blob.core.windows.net`,

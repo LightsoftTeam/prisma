@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BrandsRepository } from './domain/repositories';
 
 @Injectable()
@@ -12,10 +12,24 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async testUpdateInBatch(){
-    const brands = await this.brandsRepository.findAll();
-    console.log(brands);
-    brands.at(-1)['_etag'] = '123';
-    return this.brandsRepository.updateInBatch(brands, { partitionKeyName: 'enterpriseId' });
+  async verifyUser(email?: string){
+    if(!email){
+      throw new BadRequestException({
+        "status": 400,
+        "userMessage": "El usuario no existe",
+      })
+    }
+    if(!email.includes('joseluis')){
+      throw new BadRequestException({
+        "status": 400,
+        "userMessage": `El usuario ${email} no existe`,
+      })
+    }
+    return {
+      id: Math.floor(Math.random() * 100),
+      givenName: 'Jose Luis',
+      familyName: 'Martinez',
+      email,
+    }
   }
 }

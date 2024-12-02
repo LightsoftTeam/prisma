@@ -1,0 +1,57 @@
+az cosmosdb sql role definition list \
+    --resource-group "resource-group-1" \
+    --account-name "cdb-lightsoft-dev"
+
+
+    /subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002
+
+
+
+    az cosmosdb show \
+    --resource-group "resource-group-1" \
+    --name "cdb-lightsoft-dev" \
+    --query "{id:id}"
+
+
+    /subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev
+
+
+
+    id de l aentidad custom a65a2462-8800-475e-b104-669513da2f59
+    id de la identidad prisma dev - 5b273579-4346-424b-a9ed-c3cb8a5aef88
+    identidad custom2 e34f9cc8-8976-4526-a991-bde659049d2e
+    identidad renatto b36c857f-9443-4504-ab6a-ca88e49e4780
+
+    az cosmosdb sql role assignment create \
+    --resource-group "resource-group-1" \
+    --account-name "cdb-lightsoft-dev" \
+    --role-definition-id "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002" \
+    --principal-id "5b273579-4346-424b-a9ed-c3cb8a5aef88" \
+    --scope "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev"
+    
+    
+    
+    az cosmosdb sql role assignment create \
+    --resource-group "resource-group-1" \
+    --account-name "cdb-lightsoft-dev" \
+    --role-definition-id "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002" \
+    --principal-id "b36c857f-9443-4504-ab6a-ca88e49e4780" \
+    --scope "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev"
+    
+    
+    az cosmosdb sql role assignment create \
+    --resource-group "resource-group-1" \
+    --account-name "cdb-lightsoft-dev" \
+    --role-definition-id "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002" \
+    --principal-id "e34f9cc8-8976-4526-a991-bde659049d2e" \
+    --scope "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev"
+
+
+    az cosmosdb sql role assignment list \
+    --resource-group "resource-group-1" \
+    --account-name "cdb-lightsoft-dev"
+
+
+
+    az cosmosdb sql role assignment delete --ids "/subscriptions/a65a2462-8800-475e-b104-669513da2f59/resourceGroups/resource-group-1/providers/Microsoft.DocumentDB/databaseAccounts/cdb-lightsoft-dev/sqlRoleAssignments/0a64789b-1b9d-4d2c-be97-8d00c8f748fc"
+    az cosmosdb sql role assignment delete --account-name "cdb-lightsoft-dev" --resource-group "resource-group-1" --role-assignment-id 0a64789b-1b9d-4d2c-be97-8d00c8f748fc
