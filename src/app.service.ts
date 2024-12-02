@@ -15,12 +15,14 @@ export class AppService {
   async verifyUser(email?: string){
     if(!email){
       throw new BadRequestException({
+        "version": "1.0.0",
         "status": 400,
         "userMessage": "El usuario no existe",
       })
     }
     if(!email.includes('joseluis')){
       throw new BadRequestException({
+        "version": "1.0.0",
         "status": 400,
         "userMessage": `El usuario ${email} no existe`,
       })
