@@ -17,12 +17,14 @@ export class GeneralInterceptor implements NestInterceptor {
     const { enterpriseId, subsidiaryId } = request.params;
     const requestBody = request.body;
     // this.logger.debug(`Request body: ${JSON.stringify(requestBody)}`);
+    console.debug(`Request body: ${JSON.stringify(requestBody)}`);
 
     // Almacenar los IDs en el objeto request
     request.enterpriseId = enterpriseId;
     request.subsidiaryId = subsidiaryId;
 
     Promise.all([
+        //TODO: Cachear los resultados
         enterpriseId ? this.enterprisesRepository.findById(enterpriseId) : Promise.resolve(true),
         subsidiaryId ? this.subsidiariesRepository.findById(subsidiaryId): Promise.resolve(true),
     ]).then(([enterprise, subsidiary]) => {

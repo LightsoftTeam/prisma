@@ -5,6 +5,7 @@ import { Ubigeo } from '../../domain/entities/ubigeo.entity';
 import { getUbigeos } from './seeds/ubigeos.seed';
 import { getUnits } from './seeds/units.seed';
 import { getRoles } from './seeds/roles.seed';
+import { getGlosas } from './seeds/glosas.seed';
 dotenv.config();
 
 export enum ContainerNames{
@@ -16,6 +17,7 @@ export enum ContainerNames{
     ROLES = 'roles',
     UBIGEOS = 'ubigeos',
     UNITS = 'units',
+    GLOSAS = 'glosas',
 }
 
 export async function main() {
@@ -39,10 +41,15 @@ export async function main() {
     // for (const unit of units) {
     //     await unitsContainer.items.create(unit);
     // }
-    const rolesContainer = database.container(ContainerNames.ROLES);
-    const roles = getRoles();
-    for (const role of roles) {
-        await rolesContainer.items.create(role);
+    // const rolesContainer = database.container(ContainerNames.ROLES);
+    // const roles = getRoles();
+    // for (const role of roles) {
+    //     await rolesContainer.items.create(role);
+    // }
+    const glosasContainer = database.container(ContainerNames.GLOSAS);
+    const glosas = getGlosas();
+    for (const glosa of glosas) {
+        await glosasContainer.items.create(glosa);
     }
 }
 

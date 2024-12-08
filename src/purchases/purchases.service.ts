@@ -28,11 +28,12 @@ export class PurchasesService {
   async create(createPurchaseDto: CreatePurchaseDto) {
     try {
       this.logger.debug('Creating sale');
-      const { items, total, paymentItems: paymentItemsDto, supplierId, generateCashFlow, ...movementData } = createPurchaseDto;
+      const { items, total, paymentItems: paymentItemsDto, supplierId, generateCashFlow, transactionDocumentId, glosaId, ...movementData } = createPurchaseDto;
       if(generateCashFlow && paymentItemsDto.length === 0) {
         throw new BadRequestException(ERRORS[ERROR_CODES.PAYMENT_ITEMS_REQUIRED]);
       }
       const loggedUser = this.usersService.getLoggedUser();
+      //TODO: Validate if supplier exists, validate if products exists, validate if transaction document exists, validate if glosa exists
       const data: PurchaseData = {
         supplierId,
         items: items.map(item => ({
@@ -40,6 +41,8 @@ export class PurchasesService {
           id: uuidv4()
         })),
         total,
+        transactionDocumentId,
+        glosaId,
       }
       const movement: Movement = {
         ...movementData,

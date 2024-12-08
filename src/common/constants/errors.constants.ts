@@ -11,6 +11,7 @@ export enum ERROR_CODES {
     A_USER_HAS_THE_ROLE = 'A_USER_HAS_THE_ROLE',
     PAYMENT_ITEMS_REQUIRED = 'PAYMENT_ITEMS_REQUIRED',
     CANT_UPDATE_PERMANENT_ROLE = 'CANT_UPDATE_PERMANENT_ROLE',
+    ITEM_IS_INMUTABLE = 'ITEM_IS_INMUTABLE',
 }
 
 export const ERRORS = {
@@ -61,5 +62,9 @@ export const ERRORS = {
     [ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE]: {
         code: ERROR_CODES.CANT_UPDATE_PERMANENT_ROLE,
         message: 'You can not update a permanent role',
+    },
+    [ERROR_CODES.ITEM_IS_INMUTABLE]: {
+        code: ERROR_CODES.ITEM_IS_INMUTABLE,
+        message: 'The item is inmutable',
     },
 }

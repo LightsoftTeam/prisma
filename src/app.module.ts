@@ -27,6 +27,8 @@ import { PurchasesModule } from './purchases/purchases.module';
 import { MovementsModule } from './movements/movements.module';
 import { PruebaModule } from './prueba/prueba.module';
 import { DefaultAzureCredential } from '@azure/identity';
+import { TransactionDocumentsModule } from './transaction-documents/transaction-documents.module';
+import { GlosasModule } from './glosas/glosas.module';
 
 @Module({
   imports: [
@@ -68,6 +70,8 @@ import { DefaultAzureCredential } from '@azure/identity';
     PurchasesModule,
     MovementsModule,
     PruebaModule,
+    TransactionDocumentsModule,
+    GlosasModule,
   ],
   controllers: [AppController],
   providers: [

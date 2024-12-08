@@ -32,6 +32,8 @@ export interface PurchaseData {
     supplierId: string;
     total: number;
     items: PurchaseItem[];
+    transactionDocumentId: string;
+    glosaId: string;
 }
 
 export interface CashBoxMovementData {

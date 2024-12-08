@@ -1524,6 +1524,128 @@
           }
         }
       }
+    },
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/transaction-documents": {
+      "get": {
+        "operationId": "TransactionDocumentsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Transaction Documents"
+        ]
+      }
+    },
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/glosas": {
+      "post": {
+        "operationId": "GlosasController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGlosaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Glosa created"
+          }
+        },
+        "tags": [
+          "Glosas"
+        ]
+      },
+      "get": {
+        "operationId": "GlosasController_findAll",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "description": "Glosa type",
+            "example": "income",
+            "schema": {
+              "nullable": true,
+              "enum": [
+                "income",
+                "expense",
+                "cash_box",
+                "guide"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Glosas found"
+          }
+        },
+        "tags": [
+          "Glosas"
+        ]
+      }
+    },
+    "/api/enterprises/{enterpriseId}/subsidiaries/{subsidiaryId}/glosas/{id}": {
+      "patch": {
+        "operationId": "GlosasController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGlosaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Glosa updated"
+          }
+        },
+        "tags": [
+          "Glosas"
+        ]
+      },
+      "delete": {
+        "operationId": "GlosasController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Glosa deleted"
+          }
+        },
+        "tags": [
+          "Glosas"
+        ]
+      }
     }
   },
   "info": {
@@ -2313,6 +2435,17 @@
             "description": "Total",
             "example": 100
           },
+          "transactionDocumentId": {
+            "type": "string",
+            "description": "Transaction document ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b"
+          },
+          "glosaId": {
+            "type": "string",
+            "description": "Transaction document ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b",
+            "nullable": true
+          },
           "paymentItems": {
             "description": "Payment items",
             "type": "array",
@@ -2334,6 +2467,8 @@
         "required": [
           "items",
           "total",
+          "transactionDocumentId",
+          "glosaId",
           "paymentItems",
           "supplierId",
           "generateCashFlow"
@@ -2353,6 +2488,17 @@
             "type": "number",
             "description": "Total",
             "example": 100
+          },
+          "transactionDocumentId": {
+            "type": "string",
+            "description": "Transaction document ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b"
+          },
+          "glosaId": {
+            "type": "string",
+            "description": "Transaction document ID",
+            "example": "f7b1f1b0-0b1b-4b7b-8b1b-0b1b1b1b1b1b",
+            "nullable": true
           },
           "paymentItems": {
             "description": "Payment items",
@@ -2380,6 +2526,65 @@
       "UpdatePruebaDto": {
         "type": "object",
         "properties": {}
+      },
+      "CreateGlosaDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the glosa",
+            "example": "Glosa 1"
+          },
+          "type": {
+            "type": "string",
+            "description": "The glosa type",
+            "example": "income",
+            "enum": [
+              "income",
+              "expense",
+              "cash_box",
+              "guide"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "The name of the glosa",
+            "example": "Glosa 1",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "description"
+        ]
+      },
+      "UpdateGlosaDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the glosa",
+            "example": "Glosa 1"
+          },
+          "type": {
+            "type": "string",
+            "description": "The glosa type",
+            "example": "income",
+            "enum": [
+              "income",
+              "expense",
+              "cash_box",
+              "guide"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "The name of the glosa",
+            "example": "Glosa 1",
+            "nullable": true
+          }
+        }
       }
     }
   }
