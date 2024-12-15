@@ -11,6 +11,34 @@ const RETRY_DELAY = 1000;
 export interface COSMOS_ENTITY {
     id?: string;
 }
+
+export interface Condition{
+    operator: string;
+    value: string | number;
+}
+
+export class Operators {
+    static MoreThan(value: number) {
+        return { operator: '>', value };
+    }
+
+    static LessThan(value: number) {
+        return { operator: '<', value };
+    }
+
+    static Equals(value: any) {
+        return { operator: '=', value };
+    }
+
+    static Like(value: string) {
+        return { operator: 'LIKE', value };
+    }
+}
+
+export interface WhereItem {
+    [key: string]: string | number | Condition;
+}
+
 @Injectable()
 export class Repository<T extends COSMOS_ENTITY> {
 
@@ -27,15 +55,34 @@ export class Repository<T extends COSMOS_ENTITY> {
 
     async findAll({
         orderBy = 'createdAt',
+        where = [],
         orderDirection = 'DESC'
     }: {
         orderBy?: string;
         orderDirection?: 'ASC' | 'DESC';
+        where?: WhereItem[];
     } = {}): Promise<T[]> {
         const querySpec = {
-            query: `SELECT * FROM c WHERE NOT IS_DEFINED(c.deletedAt) ORDER BY c.${orderBy} ${orderDirection}`,
+            query: `SELECT * FROM c WHERE NOT IS_DEFINED(c.deletedAt)`,
+            parameters: []
         };
-        console.log(querySpec);
+        for (const whereItem of where) {
+            querySpec.query += ` AND (`;
+            querySpec.query += Object.entries(whereItem).map((fieldCondition) => {
+                const [field, condition] = fieldCondition;
+                let { operator, value } = typeof condition === 'object' ? condition : Operators.Equals(condition);
+                querySpec.parameters.push({
+                    name: `@${field}`,
+                    value: typeof value === 'string' ? value.toLowerCase() : value
+                });
+                if(operator === 'LIKE'){
+                    return `CONTAINS(LOWER(c.${field}), @${field})`;
+                }
+                return `c.${field} ${operator} @${field}`;
+            }).join(' OR ') + ')';
+        }
+        querySpec.query += ` ORDER BY c.${orderBy} ${orderDirection}`;
+        console.log('Find all query: ' + JSON.stringify(querySpec));
         const { resources } = await this.container.items.query(querySpec).fetchAll();
         return resources;
     }

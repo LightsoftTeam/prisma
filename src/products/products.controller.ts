@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseInterceptors, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
 import { GeneralInterceptor } from 'src/common/interceptors/general.interceptor';
+import { FindProductsDto } from './dto/find-products.dto';
 
 @ApiTags('Products')
 @Controller('enterprises/:enterpriseId/subsidiaries/:subsidiaryId/products')
@@ -19,8 +20,8 @@ export class ProductsController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Get all products' })
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() findProducts: FindProductsDto) {
+    return this.productsService.findAll(findProducts);
   }
 
   @Get(':id')

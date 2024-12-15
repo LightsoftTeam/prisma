@@ -4,7 +4,6 @@ import type { Container } from '@azure/cosmos';
 import { Glosa, GlosaType } from '../entities';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
 import { Repository } from './repository';
-import { FindGlosasDto } from '../../glosas/dto/find-glosas.dto';
 
 export interface Filters{
     type?: GlosaType;

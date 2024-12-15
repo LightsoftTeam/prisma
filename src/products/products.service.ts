@@ -8,6 +8,8 @@ import { ProductsRepository } from 'src/domain/repositories/products.repository'
 import { CategoriesRepository } from '../domain/repositories/categories.repository';
 import { REQUEST } from '@nestjs/core';
 import { StockRepository } from '../domain/repositories/stock.repository';
+import { FindProductsDto } from './dto/find-products.dto';
+import { Operators, WhereItem } from 'src/domain/repositories';
 
 @Injectable()
 export class ProductsService {
@@ -36,8 +38,21 @@ export class ProductsService {
     return this.toJson(product);
   }
 
-  async findAll() {
-    const products = await this.productsRepository.findByEnterpriseId(this.request.enterpriseId);
+  async findAll(findProductsDto: FindProductsDto) {
+    const { q } = findProductsDto;
+    const where: WhereItem[] = [
+      {
+        enterpriseId: this.request.enterpriseId,
+      }
+    ];
+    if(q){
+      where.push(
+          { name: Operators.Like(q), code: Operators.Like(q) },
+      );
+    }
+    const products = await this.productsRepository.findAll({
+      where
+    });
     return this.toJson(products);
   }
 
