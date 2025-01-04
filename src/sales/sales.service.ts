@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { ApplicationLoggerService } from 'src/common/services/application-logger.service';
-import { CashBoxMovementData, CashFlowType, Movement, MovementType, PaymentItem, SaleData } from 'src/domain/entities';
+import { CashBoxMovementData, CashFlowType, Movement, MovementType, PaymentItem, PRODUCT_BASIC_FIELDS, SaleData } from 'src/domain/entities';
 import { v4 as uuidv4 } from 'uuid';
 import { MovementsRepository, PaymentConceptsRepository, ProductsRepository } from 'src/domain/repositories';
 import { UsersService } from 'src/users/users.service';
@@ -9,7 +9,6 @@ import { ErrorEventsRepository } from 'src/domain/repositories/error-events.repo
 import { ErrorEvent } from 'src/domain/errors/error-event.error';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { REQUEST } from '@nestjs/core';
-import { BASIC_PRODUCT_FIELDS } from 'src/common/constants/basic-fields.constants';
 
 @Injectable()
 export class SalesService {
@@ -107,7 +106,7 @@ export class SalesService {
       const data = movement.data as SaleData;
       return acc.concat(data.items.map(item => item.productId));
     }, []);
-    const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
+    const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
     movements.forEach(movement => {
       const data = movement.data as SaleData;
       data.items = data.items.map(item => ({
@@ -138,7 +137,7 @@ export class SalesService {
     const data = movement.data as SaleData;
     const productIds = data.items.map(item => item.productId);
     this.logger.debug(`Product ids: ${productIds.join(', ')}`);
-    const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
+    const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
     this.logger.debug(`Products found: ${products.length}`);
     data.items = data.items.map(item => ({
       ...item,
