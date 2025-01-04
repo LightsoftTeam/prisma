@@ -18,3 +18,5 @@ export class Product {
     @CosmosDateTime() updatedAt?: Date;
     @CosmosDateTime() deletedAt?: Date;
 }
+
+export const PRODUCT_BASIC_FIELDS = ['id', 'name', 'code', 'salePrice', 'purchasePrice', 'image'];

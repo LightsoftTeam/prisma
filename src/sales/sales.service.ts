@@ -101,8 +101,21 @@ export class SalesService {
     }
   }
 
-  findAll() {
-    return this.movementsRepository.findBySubsidiaryId(this.request.subsidiaryId);
+  async findAll() {
+    const movements = await this.movementsRepository.findByMovementType({subsidiaryId: this.request.subsidiaryId, movementType: MovementType.SALE});
+    const productIds = movements.reduce((acc, movement) => {
+      const data = movement.data as SaleData;
+      return acc.concat(data.items.map(item => item.productId));
+    }, []);
+    const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
+    movements.forEach(movement => {
+      const data = movement.data as SaleData;
+      data.items = data.items.map(item => ({
+        ...item,
+        product: products.find(product => product.id === item.productId)
+      }));
+    });
+    return movements;
   }
 
   async findOne(id: string) {
