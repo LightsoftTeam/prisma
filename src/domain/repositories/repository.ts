@@ -327,4 +327,31 @@ export class Repository<T extends COSMOS_ENTITY> {
         }
         throw new ErrorEvent('Error in batch, http status code was 200 but operations not were successful', 500, result);
     }
+
+    fill({
+        entity,
+        entities,
+        options
+    }: {
+        entity?: T,
+        entities?: T[],
+        options: {
+            field: string,
+            foreignName: string;
+            items: { [key: string]: any }[],
+        }[]
+    }){
+        if(!entity && !entities) throw new Error('Entity or entities must be provided');
+        if(entity && entities) throw new Error('Entity and entities cannot be provided at the same time');
+        for (const option of options) {
+            if(entity) {
+                entity[option.field] = option.items.find(item => item.id === entity[option.foreignName]);
+            } else {
+                entities.forEach(entity => {
+                    entity[option.field] = option.items.find(item => item.id === entity[option.foreignName]);
+                });
+            }
+        }
+        return entity ?? entities;
+    }
 }

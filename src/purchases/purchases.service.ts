@@ -4,11 +4,10 @@ import { ApplicationLoggerService } from 'src/common/services/application-logger
 import { ErrorEventsRepository, MovementsRepository, PaymentConceptsRepository, ProductsRepository } from 'src/domain/repositories';
 import { REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
-import { CashBoxMovementData, CashFlowType, Movement, MovementType, PaymentItem, PurchaseData } from 'src/domain/entities';
+import { CashBoxMovementData, CashFlowType, Movement, MovementType, PaymentItem, PRODUCT_BASIC_FIELDS, PurchaseData } from 'src/domain/entities';
 import { v4 as uuidv4 } from 'uuid';
 import { ERROR_CODES, ERRORS } from 'src/common/constants/errors.constants';
 import { ErrorEvent } from 'src/domain/errors/error-event.error';
-import { BASIC_PRODUCT_FIELDS } from 'src/common/constants/basic-fields.constants';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 
 @Injectable()
@@ -139,7 +138,7 @@ export class PurchasesService {
     const data = movement.data as PurchaseData;
     const productIds = data.items.map(item => item.productId);
     this.logger.debug(`Product ids: ${productIds.join(', ')}`);
-    const products = await this.productsRepository.selectAndFindByIds(productIds, BASIC_PRODUCT_FIELDS);
+    const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
     this.logger.debug(`Products found: ${products.length}`);
     data.items = data.items.map(item => ({
       ...item,

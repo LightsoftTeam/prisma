@@ -19,6 +19,7 @@ export interface SaleData {
     customerId: string;
     total: number;
     items: SaleItem[];
+    paymentItems: PaymentItem[];
 }
 
 export interface PaymentItem {

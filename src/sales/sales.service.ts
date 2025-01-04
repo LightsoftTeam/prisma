@@ -30,12 +30,18 @@ export class SalesService {
       this.logger.debug('Creating sale');
       const { items, total, paymentItems, customerId, ...movementData } = createSaleDto;
       const loggedUser = this.usersService.getLoggedUser();
+      const paymentItemsDocuments = paymentItems.map(item => ({
+        ...item,
+        id: uuidv4(),
+        createdAt: new Date(),
+      }));
       const data: SaleData = {
         customerId,
         items: items.map(item => ({
           ...item,
           id: uuidv4()
         })),
+        paymentItems: paymentItemsDocuments,
         total,
       }
       const movement: Movement = {
@@ -52,11 +58,7 @@ export class SalesService {
       try {
         const cashBoxMovementData: CashBoxMovementData = {
           type: CashFlowType.INCOME,
-          items: paymentItems.map(item => ({
-            ...item,
-            id: uuidv4(),
-            createdAt: new Date(),
-          })),
+          items: paymentItemsDocuments,
           paymentConceptId: this.paymentConceptsRepository.getPurchaseConceptId(),
           total,
         }
@@ -74,7 +76,18 @@ export class SalesService {
         this.movementsRepository.delete(newMovement.id);
         throw error;
       }
-      return newMovement;
+      const productIds = items.map(item => item.productId);
+      const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
+      return this.movementsRepository.fill({
+        entity: newMovement,
+        options: [
+          {
+            field: 'products',
+            foreignName: 'productId',
+            items: products,
+          }
+        ]
+      });
     } catch (error) {
       this.logger.critical(`Error creating sale ${error.message}`);
       if (error instanceof ErrorEvent) {
@@ -107,42 +120,40 @@ export class SalesService {
       return acc.concat(data.items.map(item => item.productId));
     }, []);
     const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
-    movements.forEach(movement => {
-      const data = movement.data as SaleData;
-      data.items = data.items.map(item => ({
-        ...item,
-        product: products.find(product => product.id === item.productId)
-      }));
+    return this.movementsRepository.fill({
+      entities: movements,
+      options: [
+        {
+          field: 'products',
+          foreignName: 'productId',
+          items: products,
+        }
+      ]
     });
-    return movements;
   }
 
   async findOne(id: string) {
     this.logger.debug(`Finding movement - ${id}`);
     const movement = await this.movementsRepository.findById(id);
-    return this.fill(movement);
+    if(movement.type !== MovementType.SALE) {
+      throw new BadRequestException('Sale not found');
+    }
+    const productIds = (movement.data as SaleData).items.map(item => item.productId);
+    const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
+    return this.movementsRepository.fill({
+      entity: movement,
+      options: [
+        {
+          field: 'products',
+          foreignName: 'productId',
+          items: products,
+        }
+      ]
+    });
   }
-
-  // update(id: number, updateSaleDto: UpdateSaleDto) {
-  //   return `This action updates a #${id} sale`;
-  // }
 
   remove(id: string) {
     throw new InternalServerErrorException('Method not implemented.');
     return this.movementsRepository.delete(id);
-  }
-
-  async fill(movement: Movement): Promise<Movement> {
-    this.logger.debug(`Filling movement - ${movement.id}`);
-    const data = movement.data as SaleData;
-    const productIds = data.items.map(item => item.productId);
-    this.logger.debug(`Product ids: ${productIds.join(', ')}`);
-    const products = await this.productsRepository.selectAndFindByIds(productIds, PRODUCT_BASIC_FIELDS);
-    this.logger.debug(`Products found: ${products.length}`);
-    data.items = data.items.map(item => ({
-      ...item,
-      product: products.find(product => product.id === item.productId)
-    }));
-    return movement;
   }
 }
